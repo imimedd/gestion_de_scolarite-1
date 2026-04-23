@@ -30,7 +30,7 @@ $recherche = $_GET['recherche'] ?? '';
 // Récupérer les étudiants du groupe choisi
 $etudiants = [];
 if ($groupe_choisi_id) {
-    $sql = "SELECT matricule, nom, prenom FROM etudiants WHERE id_groupe = ?";
+    $sql = "SELECT matricule, nom, prenom FROM etudiants WHERE groupe_td = ?";
     $params = [$groupe_choisi_id];
 
     if (!empty($recherche)) {
@@ -49,13 +49,13 @@ if ($groupe_choisi_id) {
 $notes_existantes = [];
 if ($groupe_choisi_id && !empty($etudiants)) {
     // Récupérer les évaluations pour ce module et ce groupe
-    $stmt = $pdo->prepare("
-        SELECT e.id_evaluation, e.type_eval, n.id_etudiant, n.note, et.matricule
-        FROM evaluations e
-        JOIN notes n ON n.id_evaluation = e.id_evaluation
-        JOIN etudiants et ON et.id_etudiant = n.id_etudiant
-        WHERE e.id_module = ? AND e.id_groupe = ?
-    ");
+   $stmt = $pdo->prepare("
+    SELECT e.id_evaluation, e.type_eval, n.id_etudiant, n.note, et.matricule
+    FROM evaluations e
+    JOIN notes n ON n.id_evaluation = e.id_evaluation
+    JOIN etudiants et ON et.numero = n.id_etudiant
+    WHERE e.id_module = ? AND e.id_groupe = ?
+");
     $stmt->execute([$module_choisi_id, $groupe_choisi_id]);
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -85,18 +85,7 @@ $success = isset($_GET['success']) && $_GET['success'] == 1;
     <title>Saisir les notes — Enseignant</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        table { width: 100%; border-collapse: collapse; margin-top: 24px; background: white; border-radius: 8px; overflow: hidden; }
-        th { background: #1a2a4a; color: white; padding: 12px 16px; text-align: left; font-size: 13px; }
-        td { padding: 10px 16px; border-bottom: 1px solid #eee; font-size: 14px; color: #000; }
-        tr:last-child td { border-bottom: none; }
-        tr:hover td { background: #f5f8ff; }
-        input[type="number"] { width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
-        .btn-save { margin-top: 16px; padding: 10px 24px; background: #1a2a4a; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; }
-        .btn-save:hover { background: #2c3e6a; }
-        .no-data { color: #888; margin-top: 20px; font-size: 14px; }
-        .success { background: #d4edda; color: #155724; padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; }
-    </style>
+  
 </head>
 <body>
 

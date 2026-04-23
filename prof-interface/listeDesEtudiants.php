@@ -1,5 +1,5 @@
 <?php
-require_once("connexion.php");
+require_once("../connexion.php");
 
 $annee       = "2025 / 2026";
 $currentPage = basename($_SERVER['PHP_SELF']);
