@@ -1,5 +1,6 @@
 <?php
-require_once("connexion.php");
+session_start();
+require_once("../connexion.php");
 
 $module_id = $_POST['module'];
 $groupe_id = $_POST['groupe'];
