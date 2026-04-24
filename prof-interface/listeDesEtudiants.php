@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("../connexion.php");
 
 $annee       = "2025 / 2026";

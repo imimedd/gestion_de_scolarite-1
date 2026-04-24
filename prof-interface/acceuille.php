@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("connexion.php");
+require_once("../connexion.php");
 
 $annee       = "2025 / 2026";
 $currentPage = basename($_SERVER['PHP_SELF']);
@@ -37,6 +37,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         .ql-title { font-weight: 600; font-size: 17px; }
         .ql-desc { font-size: 13.5px; color: #64748b; line-height: 1.5; }
     </style>
+   
 </head>
 <body>
 

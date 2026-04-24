@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("connexion.php");
+require_once("../connexion.php");
 
 $departement      = "Département Informatique — USTHB";
 $annee            = "2025 / 2026";
