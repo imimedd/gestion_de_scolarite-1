@@ -22,41 +22,64 @@ if (isset($_GET['delete'])) {
     $pdo->prepare("DELETE FROM enseignants WHERE id_enseignant=?")->execute([$_GET['delete']]);
 }
 ?>
+<link rel="stylesheet" href="style.css">
 
-<!DOCTYPE html>
-<html>
-<head><title>Enseignants</title></head>
-<body>
+<div class="admin-container">
 
-<h2>Ajouter Enseignant</h2>
+    <aside class="sidebar">
+        <div class="sidebar-logo">
+            <img src="../image/logo.jpg" alt="USTHB">
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../dashboard.php">🏠 Dashboard</a>
+            <a href="gestiondesetudiants.php">🎓 Étudiants</a>
+            <a href="Gestion_des_enseignants.php" class="active">👨‍🏫 Enseignants</a>
+            <a href="Gestion des modules .php">📚 Modules</a>
+            <a href="Gestion des notes .php">📝 Notes</a>
+            <a href="../logout.php" class="btn-deconnexion">🚪 Déconnexion</a>
+        </nav>
+    </aside>
 
-<form method="POST">
-<input type="text" name="nom" placeholder="Nom" required><br><br>
-<input type="text" name="prenom" placeholder="Prénom" required><br><br>
-<input type="email" name="email" placeholder="Email" required><br><br>
-<button>Ajouter</button>
-</form>
+    <main class="admin-main">
 
-<hr>
+        <div class="admin-header">
+            <h2>👨‍🏫 Gestion des Enseignants</h2>
+        </div>
 
-<table border="1">
-<tr>
-<th>ID</th><th>Nom</th><th>Prénom</th><th>Email</th><th>Action</th>
-</tr>
+        <div class="form-card">
+            <h3>Ajouter un Enseignant</h3>
+            <form method="POST">
+                <input type="text" name="nom" placeholder="Nom" required>
+                <input type="text" name="prenom" placeholder="Prénom" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <button type="submit">+ Ajouter</button>
+            </form>
+        </div>
 
-<?php
-foreach ($pdo->query("SELECT * FROM enseignants") as $row) {
-    echo "<tr>
-    <td>{$row['id_enseignant']}</td>
-    <td>{$row['nom']}</td>
-    <td>{$row['prenom']}</td>
-    <td>{$row['email']}</td>
-    <td><a href='?delete={$row['id']}'>Delete</a></td>
-    </tr>";
-}
-?>
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($pdo->query("SELECT * FROM enseignants") as $row): ?>
+                <tr>
+                    <td><?= $row['id_enseignant'] ?></td>
+                    <td><?= $row['nom'] ?></td>
+                    <td><?= $row['prenom'] ?></td>
+                    <td><?= $row['email'] ?></td>
+                    <td>
+                        <a href="?delete=<?= $row['id_enseignant'] ?>" class="btn-supprimer">❌ Supprimer</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
 
-</table>
-
-</body>
-</html>
+    </main>
+</div>
