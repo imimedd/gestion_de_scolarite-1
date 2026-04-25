@@ -62,7 +62,7 @@ $annee = date("Y") . " / " . (date("Y") + 1);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion des Étudiants — USTHB</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../prof-interface/style.css">
 </head>
 <body>
 
@@ -80,7 +80,7 @@ $annee = date("Y") . " / " . (date("Y") + 1);
     <hr><br>
     <a href="acceuille1.php"              class="<?= $currentPage == 'acceuille1.php' ? 'active' : '' ?>">Accueil</a>
     <a href="Gestion des modules.php"     class="<?= $currentPage == 'Gestion des modules.php' ? 'active' : '' ?>">Gérer les modules</a>
-    <a href="Gestion des notes.php"       class="<?= $currentPage == 'Gestion des notes.php' ? 'active' : '' ?>">Gérer les notes</a>
+    <a href="Gestion des notes.php"       class="<?= $currentPage == 'Gestion_des_notes.php' ? 'active' : '' ?>">Gérer les notes</a>
     <a href="Gestion_des_enseignants.php" class="<?= $currentPage == 'Gestion_des_enseignants.php' ? 'active' : '' ?>">Gérer les enseignants</a>
     <a href="gestiondesetudiants.php"     class="<?= strtolower($currentPage) == 'gestiondesetudiants.php' ? 'active' : '' ?>">Gérer les étudiants</a>
     <a href="logout.php"                  class="<?= $currentPage == 'logout.php' ? 'active' : '' ?>">Déconnexion</a>

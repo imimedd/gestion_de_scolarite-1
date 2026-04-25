@@ -19,7 +19,7 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
     <meta charset="UTF-8">
     <title>Accueil — Administrateur</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../prof-interface/style.css">
     <style>
         .dashboard-content {
             padding: 30px;
@@ -116,7 +116,7 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
     <hr><br>
     <a href="acceuille1.php"              class="<?php if($currentPage == 'acceuille1.php') echo 'active'; ?>">Accueil</a>
     <a href="Gestion des modules.php"     class="<?php if($currentPage == 'Gestion des modules.php') echo 'active'; ?>">Gérer les modules</a>
-    <a href="Gestion des notes.php"       class="<?php if($currentPage == 'Gestion des notes.php') echo 'active'; ?>">Gérer les notes</a>
+    <a href="Gestion des notes.php"       class="<?php if($currentPage == 'Gestion_des_notes.php') echo 'active'; ?>">Gérer les notes</a>
     <a href="Gestion_des_enseignants.php" class="<?php if($currentPage == 'Gestion_des_enseignants.php') echo 'active'; ?>">Gérer les enseignants</a>
     <a href="gestiondesetudiants.php"     class="<?php if($currentPage == 'gestiondesetudiants.php') echo 'active'; ?>">Gérer les étudiants</a>
     <a href="logout.php"                  class="<?php if($currentPage == 'logout.php') echo 'active'; ?>">Déconnexion</a>

@@ -383,7 +383,7 @@ CREATE TABLE `modules` (
 INSERT INTO `modules` (`id_module`, `nom_module`, `code_module`, `niveau`, `semestre`, `coef`) VALUES
 (1, 'Algorithmique', 'ALGO', 'L1 Informatique', 'Semestre 1', 3),
 (2, 'Base de données', 'BDD', 'L2 Informatique', 'Semestre 3', 4),
-(3, 'Systèmes d\'exploitation', 'SE', 'L2 Informatique', 'Semestre 4', 3),
+(3, 'Systèmes ','exploitation', 'SE', 'L2 Informatique', 'Semestre 4', 3),
 (4, 'Réseaux informatiques', 'RI', 'L3 Informatique', 'Semestre 5', 4),
 (5, 'Programmation web', 'PW', 'L3 Informatique', 'Semestre 6', 3);
 
