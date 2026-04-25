@@ -4,6 +4,14 @@ require_once("../connexion.php");
 
 $annee       = date("Y") . " / " . (date("Y") + 1);
 $currentPage = basename($_SERVER['PHP_SELF']);
+
+// Statistiques
+$nb_etudiants   = $pdo->query("SELECT COUNT(*) FROM etudiants")->fetchColumn();
+$nb_modules     = $pdo->query("SELECT COUNT(*) FROM modules")->fetchColumn();
+$nb_enseignants = $pdo->query("SELECT COUNT(*) FROM enseignants")->fetchColumn();
+
+// Étudiants récents
+$etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat FROM etudiants ORDER BY numero DESC LIMIT 5")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -11,31 +19,85 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <meta charset="UTF-8">
     <title>Accueil — Administrateur</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../prof-interface/style.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        .welcome-card {
-            background: linear-gradient(135deg, #1a2a4a 0%, #2c3e6a 100%);
-            color: white;
-            padding: 40px;
-            border-radius: 16px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(26, 42, 74, 0.15);
+        .dashboard-content {
+            padding: 30px;
+            background: #f4f6fb;
+            flex: 1;
+            color: #000;
         }
-        .welcome-card h2 { margin-bottom: 12px; font-size: 26px; font-weight: 700; }
-        .welcome-card p { opacity: 0.9; font-size: 15px; max-width: 600px; line-height: 1.6; }
-        
-        .quick-links { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-top: 10px; }
-        .ql-card {
-            background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px;
-            transition: all 0.3s ease; text-decoration: none; color: #1a2a4a;
-            display: flex; flex-direction: column; gap: 12px;
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 28px;
         }
-        .ql-card:hover {
-            transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.06); border-color: #cbd5e1;
+        .stat-card {
+            background: #ffffff;
+            border: 1px solid #e0e4ef;
+            border-radius: 12px;
+            padding: 20px;
         }
-        .ql-icon { font-size: 32px; margin-bottom: 4px; }
-        .ql-title { font-weight: 600; font-size: 17px; }
-        .ql-desc { font-size: 13.5px; color: #64748b; line-height: 1.5; }
+        .stat-card .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .stat-card .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #1a2a4a;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+        .stat-card .stat-sub {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+        .stat-card.blue   { border-top: 3px solid #378ADD; }
+        .stat-card.teal   { border-top: 3px solid #1D9E75; }
+        .stat-card.purple { border-top: 3px solid #7F77DD; }
+
+        .table-card {
+            background: #ffffff;
+            border: 1px solid #e0e4ef;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .table-card-header {
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a2a4a;
+            border-bottom: 1px solid #e0e4ef;
+        }
+        .table-card table { margin-top: 0; border-radius: 0; }
+        .table-card th {
+            background: #f4f6fb;
+            color: #555;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+        .badge-actif {
+            display: inline-block;
+            background: #e6f4ea;
+            color: #2d7a3a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .badge-inactif {
+            display: inline-block;
+            background: #f1efea;
+            color: #5f5e5a;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -46,20 +108,18 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <img src="img/usthb1.png" width="100" height="100"/>
         <p><font color="#ffffff"><font size="3"><center><b>usthb - Administrateur</b></center></font></font></p>
     </div>
-    <br>
-    <hr>
+    <br><hr>
     <div style="display: flex; align-items: center;">
-        <img src="img/prof.png" width="90" height="90"/><br>
-        <center><font color="#ffffff"><font size="3"><?= $_SESSION['prenom'] . ' ' . $_SESSION['nom'] ?></font></font></center><br>
+        <img src="img/prof.png" width="90" height="90"/>
+        <center><font color="#ffffff"><font size="3"><?= $_SESSION['role'] ?></font></font></center>
     </div>
-    <hr>
-    <br>
-    <a href="acceuille1.php" class="<?php if($currentPage == 'acceuille1.php') echo 'active'; ?>">Accueil</a>
-    <a href="Gestion des modules.php" class="<?php if($currentPage == 'Gestion des modules.php') echo 'active'; ?>">Gérer les utilisateurs</a>
-    <a href="Gestion des notes.php" class="<?php if($currentPage == 'Gestion des notes.php') echo 'active'; ?>">Gérer les modules</a>
-    <a href="Gestion_des_enseignants.php" class="<?php if($currentPage == 'Gestion_des_enseignants.php') echo 'active'; ?>">Gérer les groupes</a>
-    <a href="Gestiondesétudiants.php" class="<?php if($currentPage == 'Gestiondesétudiants.php') echo 'active'; ?>">Gérer les étudiants</a>
-    <a href="logout.php" class="<?php if($currentPage == 'logout.php') echo 'active'; ?>">Déconnexion</a>
+    <hr><br>
+    <a href="acceuille1.php"              class="<?php if($currentPage == 'acceuille1.php') echo 'active'; ?>">Accueil</a>
+    <a href="Gestion des modules.php"     class="<?php if($currentPage == 'Gestion des modules.php') echo 'active'; ?>">Gérer les modules</a>
+    <a href="Gestion des notes.php"       class="<?php if($currentPage == 'Gestion des notes.php') echo 'active'; ?>">Gérer les notes</a>
+    <a href="Gestion_des_enseignants.php" class="<?php if($currentPage == 'Gestion_des_enseignants.php') echo 'active'; ?>">Gérer les enseignants</a>
+    <a href="gestiondesetudiants.php"     class="<?php if($currentPage == 'gestiondesetudiants.php') echo 'active'; ?>">Gérer les étudiants</a>
+    <a href="logout.php"                  class="<?php if($currentPage == 'logout.php') echo 'active'; ?>">Déconnexion</a>
 </div>
 
 <!-- MAIN -->
@@ -71,45 +131,66 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <div class="header-icon">🏠</div>
             <p style="color: #000; font-size: 16px;">Accueil — <span style="color: #888; font-weight: 300;">Administrateur</span></p>
         </div>
-        <div class="year-badge"><?php echo $annee; ?></div>
+        <div class="year-badge"><?= $annee ?></div>
     </div>
 
     <!-- CONTENU -->
-    <div class="content">
-        <div class="welcome-card">
-            <h2>Bienvenue sur votre espace administrateur</h2>
-            <p>Gérez les utilisateurs, les modules, les groupes et les étudiants rapidement et en toute sécurité sur la plateforme académique de l'USTHB.</p>
+    <div class="dashboard-content">
+
+        <div class="section-title">statistiques</div>
+        <div class="stats-grid">
+            <div class="stat-card blue">
+                <div class="stat-label">Nombre total d'étudiants</div>
+                <div class="stat-value"><?= $nb_etudiants ?></div>
+                <div class="stat-sub">Tous groupes confondus</div>
+            </div>
+            <div class="stat-card teal">
+                <div class="stat-label">Nombre de modules</div>
+                <div class="stat-value"><?= $nb_modules ?></div>
+                <div class="stat-sub">Semestre en cours</div>
+            </div>
+            <div class="stat-card purple">
+                <div class="stat-label">Nombre d'enseignants</div>
+                <div class="stat-value"><?= $nb_enseignants ?></div>
+                <div class="stat-sub">Actifs cette année</div>
+            </div>
         </div>
 
-        <div class="section-title">accès rapide</div>
-
-        <div class="quick-links">
-            <a href="Gestion des modules.php" class="ql-card">
-                <div class="ql-icon">👥</div>
-                <div class="ql-title">Gérer les utilisateurs</div>
-                <div class="ql-desc">Ajoutez, modifiez ou supprimez les comptes administrateurs et enseignants de la plateforme.</div>
-            </a>
-
-            <a href="Gestion des notes.php" class="ql-card">
-                <div class="ql-icon">📚</div>
-                <div class="ql-title">Gérer les modules</div>
-                <div class="ql-desc">Consultez et administrez les modules, leurs coefficients et les affectations aux groupes.</div>
-            </a>
-
-            <a href="Gestion_des_enseignants.php" class="ql-card">
-                <div class="ql-icon">👨‍🏫</div>
-                <div class="ql-title">Gérer les groupes</div>
-                <div class="ql-desc">Organisez les groupes TD et TP, et associez les étudiants et enseignants correspondants.</div>
-            </a>
-
-            <a href="Gestiondesétudiants.php" class="ql-card">
-                <div class="ql-icon">🎓</div>
-                <div class="ql-title">Gérer les étudiants</div>
-                <div class="ql-desc">Parcourez et gérez la liste complète des étudiants inscrits par section, palier et spécialité.</div>
-            </a>
+        <div class="table-card">
+            <div class="table-card-header">Étudiants récents</div>
+            <table class="table2">
+                <thead>
+                    <tr>
+                        <th>Numéro</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Groupe TD</th>
+                        <th>Section</th>
+                        <th>État</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($etudiants as $e): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($e['numero']) ?></td>
+                        <td><?= htmlspecialchars($e['nom']) ?></td>
+                        <td><?= htmlspecialchars($e['prenom']) ?></td>
+                        <td><?= htmlspecialchars($e['groupe_td']) ?></td>
+                        <td><?= htmlspecialchars($e['section']) ?></td>
+                        <td>
+                            <?php if(strtolower($e['etat']) === 'actif'): ?>
+                                <span class="badge-actif">Actif</span>
+                            <?php else: ?>
+                                <span class="badge-inactif">Inactif</span>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
         </div>
+
     </div>
-
 </div>
 
 </body>
