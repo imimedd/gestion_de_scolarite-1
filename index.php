@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USTHB-gestion de la scolarité</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="prof-interface/style.css">
 </head>
 <body>
     <nav class="navbar">
@@ -52,7 +52,7 @@ consultez les notes, gérez les modules et suivez les résultats académiques</p
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USTHB-gestion de la scolarité</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="prof-interface/style.css">
 </head>
 <body>
     <nav class="navbar">

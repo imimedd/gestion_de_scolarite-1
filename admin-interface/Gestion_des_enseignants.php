@@ -22,7 +22,7 @@ if (isset($_GET['delete'])) {
     $pdo->prepare("DELETE FROM enseignants WHERE id_enseignant=?")->execute([$_GET['delete']]);
 }
 ?>
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../prof-interface/style.css">
 
 <div class="admin-container">
 

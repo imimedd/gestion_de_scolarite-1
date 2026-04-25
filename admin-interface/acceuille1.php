@@ -19,7 +19,7 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
     <meta charset="UTF-8">
     <title>Accueil — Administrateur</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../prof-interface/style.css">
     <style>
         .dashboard-content {
             padding: 30px;

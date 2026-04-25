@@ -30,7 +30,7 @@ if (isset($_GET['delete'])) {
 <html lang="fr">
 <head>
 <title>Gestion des Modules</title>
- <link rel="stylesheet" href="style.css">
+ <link rel="stylesheet" href="../prof-interface/style.css">
 </head>
 
 <body>
