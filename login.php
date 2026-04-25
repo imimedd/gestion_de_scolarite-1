@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("database.php");
+require_once("connexion.php");
 
 $error_message = null;
 
@@ -51,10 +51,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['role'] = $user['role'] ?? 'admin';
                     
                     if (isset($user['role']) && strtolower($user['role']) === 'enseignant') {
-                        header("Location: prof-interface/index.php");
+                        header("Location: admin-interface/acceuille1.php");
                         exit();
                     } else {
-                        header("Location: dashboard.php");
+                        header("Location:admin-interface/acceuille1.php");
                         exit();
                     }
                 } else {
