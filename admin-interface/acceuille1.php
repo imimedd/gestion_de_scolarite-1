@@ -116,7 +116,7 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
     <hr><br>
     <a href="acceuille1.php"              class="<?php if($currentPage == 'acceuille1.php') echo 'active'; ?>">Accueil</a>
     <a href="Gestion des modules.php"     class="<?php if($currentPage == 'Gestion des modules.php') echo 'active'; ?>">Gérer les modules</a>
-    <a href="Gestion des notes.php"       class="<?php if($currentPage == 'Gestion des notes.php') echo 'active'; ?>">Gérer les notes</a>
+    <a href="Gestion des notes.php"       class="<?php if($currentPage == 'Gestion_des_notes.php') echo 'active'; ?>">Gérer les notes</a>
     <a href="Gestion_des_enseignants.php" class="<?php if($currentPage == 'Gestion_des_enseignants.php') echo 'active'; ?>">Gérer les enseignants</a>
     <a href="gestiondesetudiants.php"     class="<?php if($currentPage == 'gestiondesetudiants.php') echo 'active'; ?>">Gérer les étudiants</a>
     <a href="logout.php"                  class="<?php if($currentPage == 'logout.php') echo 'active'; ?>">Déconnexion</a>
