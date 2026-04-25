@@ -1,3 +1,36 @@
+<<<<<<< HEAD
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+body {
+    background-color: #f4f6f9;
+}
+.admin-container {
+    display: flex;
+    min-height: 100vh;
+}
+/* ===== SIDEBAR ===== */
+.sidebar {
+    width: 220px;
+    background-color: #1a3c8f;
+    position: fixed;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+}
+
+.sidebar-logo img {
+    width: 80px;
+    display: block;
+    margin: 0 auto 20px auto;
+}
+
+.sidebar-nav {
+=======
 /* ========================================
    STYLE.CSS — Gestion Scolarité USTHB
    Partagé entre toutes les interfaces
@@ -122,10 +155,158 @@ body {
    ======================================== */
 .main {
     flex: 1;
+>>>>>>> de96adfc9c41ad8c128c432f7d9e7d113b711f49
     display: flex;
     flex-direction: column;
 }
 
+<<<<<<< HEAD
+.sidebar-nav a {
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.sidebar-nav a:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+.sidebar-nav a.active {
+    background-color: rgba(255,255,255,0.2);
+    font-weight: 600;
+    border-left: 4px solid white;
+}
+
+.btn-deconnexion {
+    margin-top: auto;
+    color: #ff6b6b !important;
+}
+
+/* ===== MAIN ===== */
+.admin-main {
+    margin-left: 220px;
+    padding: 30px;
+    width: 100%;
+}
+
+/* ===== HEADER ===== */
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.admin-header h2 {
+    color: #1a3c8f;
+    font-size: 22px;
+}
+
+.btn-ajouter {
+    background-color: #1a3c8f;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+/* ===== FORM ===== */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.form-card h3 {
+    color: #1a3c8f;
+    margin-bottom: 20px;
+}
+
+.form-card input {
+    width: 250px;
+    padding: 10px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.form-card button {
+    background-color: #1a3c8f;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.form-card button:hover {
+    background-color: #0f2660;
+}
+
+/* ===== TABLE ===== */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.admin-table thead tr {
+    background-color: #1a3c8f;
+    color: white;
+}
+
+.admin-table th {
+    padding: 14px;
+    text-align: left;
+    font-size: 14px;
+}
+
+.admin-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+}
+
+.admin-table tbody tr:hover {
+    background-color: #f4f6f9;
+}
+
+.btn-modifier {
+    background-color: #f39c12;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    margin-right: 5px;
+}
+
+.btn-supprimer {
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 13px;
+}
+=======
 .content {
     flex: 1;
     padding: 30px;
@@ -897,3 +1078,4 @@ table { width: 80%; border-collapse: collapse; margin-top: 24px; background: whi
 }
   }
   
+>>>>>>> de96adfc9c41ad8c128c432f7d9e7d113b711f49
