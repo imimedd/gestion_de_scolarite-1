@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 24, 2026 at 02:48 PM
+-- Generation Time: Apr 25, 2026 at 11:05 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,7 +18,8 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `gestion_scolarite`--
+-- Database: `gestion_scolarite`
+--
 
 -- --------------------------------------------------------
 
@@ -40,7 +41,7 @@ CREATE TABLE `administrateurs` (
 --
 
 INSERT INTO `administrateurs` (`id`, `email`, `password`, `role`, `nom`, `prenom`) VALUES
-(1, 'admin@usthb.dz', 'adminusthb', 'admin', 'med', 'mohamed');
+(2, 'admin@usthb.dz', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', '', '');
 
 -- --------------------------------------------------------
 
@@ -335,10 +336,10 @@ INSERT INTO `evaluations` (`id_evaluation`, `id_module`, `id_groupe`, `type_eval
 (2, 1, 1, 'Contrôle 2', '2026-04-17'),
 (3, 1, 1, 'TP', '2026-04-17'),
 (4, 1, 1, 'Examen final', '2026-04-17'),
-(5, 4, 3, 'Contrôle 1', '2026-04-17'),
-(6, 4, 3, 'Contrôle 2', '2026-04-17'),
-(7, 4, 3, 'TP', '2026-04-17'),
-(8, 4, 3, 'Examen final', '2026-04-17');
+(18, 1, 2, 'Contrôle 1', '2026-04-25'),
+(19, 1, 2, 'Contrôle 2', '2026-04-25'),
+(20, 1, 2, 'TP', '2026-04-25'),
+(21, 1, 2, 'Examen final', '2026-04-25');
 
 -- --------------------------------------------------------
 
@@ -371,7 +372,6 @@ CREATE TABLE `modules` (
   `id_module` int(11) NOT NULL,
   `nom_module` varchar(100) NOT NULL,
   `code_module` varchar(20) DEFAULT NULL,
-  `niveau` varchar(50) DEFAULT NULL,
   `semestre` varchar(20) DEFAULT NULL,
   `coef` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -380,12 +380,12 @@ CREATE TABLE `modules` (
 -- Dumping data for table `modules`
 --
 
-INSERT INTO `modules` (`id_module`, `nom_module`, `code_module`, `niveau`, `semestre`, `coef`) VALUES
-(1, 'Algorithmique', 'ALGO', 'L1 Informatique', 'Semestre 1', 3),
-(2, 'Base de données', 'BDD', 'L2 Informatique', 'Semestre 3', 4),
-(3, 'Systèmes ','exploitation', 'SE', 'L2 Informatique', 'Semestre 4', 3),
-(4, 'Réseaux informatiques', 'RI', 'L3 Informatique', 'Semestre 5', 4),
-(5, 'Programmation web', 'PW', 'L3 Informatique', 'Semestre 6', 3);
+INSERT INTO `modules` (`id_module`, `nom_module`, `code_module`, `semestre`, `coef`) VALUES
+(1, 'Algorithmique', 'ALGO', 'Semestre 1', 3),
+(2, 'Base de données', 'BDD', 'Semestre 3', 4),
+(3, 'Systèmes d\'exploitation', 'SE', 'Semestre 4', 3),
+(4, 'Réseaux informatiques', 'RI', 'Semestre 5', 4),
+(5, 'Programmation web', 'PW', 'Semestre 6', 3);
 
 -- --------------------------------------------------------
 
@@ -426,7 +426,7 @@ CREATE TABLE `notes` (
   `id_note` int(11) NOT NULL,
   `id_etudiant` int(11) NOT NULL,
   `id_evaluation` int(11) NOT NULL,
-  `note` decimal(4,2) NOT NULL CHECK (`note` >= 0 and `note` <= 20)
+  `note` decimal(4,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -434,28 +434,198 @@ CREATE TABLE `notes` (
 --
 
 INSERT INTO `notes` (`id_note`, `id_etudiant`, `id_evaluation`, `note`) VALUES
-(1, 1, 1, 0.00),
-(2, 1, 2, 0.00),
-(3, 2, 1, 0.00),
-(4, 2, 4, 0.00),
-(5, 11, 5, 0.00),
-(6, 11, 6, 0.00),
-(7, 3, 1, 0.00),
-(8, 4, 1, 0.00),
-(9, 5, 1, 0.00),
-(10, 2, 2, 0.00),
-(11, 3, 2, 0.00),
-(12, 4, 2, 0.00),
-(13, 5, 2, 0.00),
-(14, 1, 3, 0.00),
-(15, 2, 3, 0.00),
-(16, 3, 3, 0.00),
-(17, 4, 3, 0.00),
-(18, 5, 3, 0.00),
-(19, 1, 4, 0.00),
-(20, 3, 4, 0.00),
-(21, 4, 4, 0.00),
-(22, 5, 4, 0.00);
+(2432, 1, 18, 9.00),
+(2433, 2, 18, 12.00),
+(2434, 7, 18, 0.00),
+(2435, 9, 18, 0.00),
+(2436, 11, 18, 0.00),
+(2437, 24, 18, 0.00),
+(2438, 27, 18, 0.00),
+(2439, 29, 18, 0.00),
+(2440, 48, 18, 0.00),
+(2441, 67, 18, 0.00),
+(2442, 70, 18, 0.00),
+(2443, 72, 18, 0.00),
+(2444, 76, 18, 0.00),
+(2445, 78, 18, 0.00),
+(2446, 81, 18, 0.00),
+(2447, 84, 18, 0.00),
+(2448, 85, 18, 0.00),
+(2449, 90, 18, 0.00),
+(2450, 91, 18, 0.00),
+(2451, 95, 18, 0.00),
+(2452, 114, 18, 0.00),
+(2453, 117, 18, 0.00),
+(2454, 120, 18, 0.00),
+(2455, 121, 18, 0.00),
+(2456, 123, 18, 0.00),
+(2457, 132, 18, 0.00),
+(2458, 135, 18, 0.00),
+(2459, 140, 18, 0.00),
+(2460, 141, 18, 0.00),
+(2461, 146, 18, 0.00),
+(2462, 147, 18, 0.00),
+(2463, 151, 18, 0.00),
+(2464, 159, 18, 0.00),
+(2465, 162, 18, 0.00),
+(2466, 166, 18, 0.00),
+(2467, 168, 18, 0.00),
+(2468, 177, 18, 0.00),
+(2469, 179, 18, 0.00),
+(2470, 181, 18, 0.00),
+(2471, 183, 18, 0.00),
+(2472, 184, 18, 0.00),
+(2473, 189, 18, 0.00),
+(2474, 191, 18, 0.00),
+(2475, 192, 18, 0.00),
+(2476, 193, 18, 0.00),
+(2477, 195, 18, 0.00),
+(2478, 200, 18, 0.00),
+(2479, 203, 18, 0.00),
+(2480, 1, 19, 0.00),
+(2481, 2, 19, 0.00),
+(2482, 7, 19, 0.00),
+(2483, 9, 19, 0.00),
+(2484, 11, 19, 0.00),
+(2485, 24, 19, 0.00),
+(2486, 27, 19, 0.00),
+(2487, 29, 19, 0.00),
+(2488, 48, 19, 0.00),
+(2489, 67, 19, 0.00),
+(2490, 70, 19, 0.00),
+(2491, 72, 19, 0.00),
+(2492, 76, 19, 0.00),
+(2493, 78, 19, 0.00),
+(2494, 81, 19, 0.00),
+(2495, 84, 19, 0.00),
+(2496, 85, 19, 0.00),
+(2497, 90, 19, 0.00),
+(2498, 91, 19, 0.00),
+(2499, 95, 19, 0.00),
+(2500, 114, 19, 0.00),
+(2501, 117, 19, 0.00),
+(2502, 120, 19, 0.00),
+(2503, 121, 19, 0.00),
+(2504, 123, 19, 0.00),
+(2505, 132, 19, 0.00),
+(2506, 135, 19, 0.00),
+(2507, 140, 19, 0.00),
+(2508, 141, 19, 0.00),
+(2509, 146, 19, 0.00),
+(2510, 147, 19, 0.00),
+(2511, 151, 19, 0.00),
+(2512, 159, 19, 0.00),
+(2513, 162, 19, 0.00),
+(2514, 166, 19, 0.00),
+(2515, 168, 19, 0.00),
+(2516, 177, 19, 0.00),
+(2517, 179, 19, 0.00),
+(2518, 181, 19, 0.00),
+(2519, 183, 19, 0.00),
+(2520, 184, 19, 0.00),
+(2521, 189, 19, 0.00),
+(2522, 191, 19, 0.00),
+(2523, 192, 19, 0.00),
+(2524, 193, 19, 0.00),
+(2525, 195, 19, 0.00),
+(2526, 200, 19, 0.00),
+(2527, 203, 19, 0.00),
+(2528, 1, 20, 0.00),
+(2529, 2, 20, 0.00),
+(2530, 7, 20, 0.00),
+(2531, 9, 20, 0.00),
+(2532, 11, 20, 0.00),
+(2533, 24, 20, 0.00),
+(2534, 27, 20, 0.00),
+(2535, 29, 20, 0.00),
+(2536, 48, 20, 0.00),
+(2537, 67, 20, 0.00),
+(2538, 70, 20, 0.00),
+(2539, 72, 20, 0.00),
+(2540, 76, 20, 0.00),
+(2541, 78, 20, 0.00),
+(2542, 81, 20, 0.00),
+(2543, 84, 20, 0.00),
+(2544, 85, 20, 0.00),
+(2545, 90, 20, 0.00),
+(2546, 91, 20, 0.00),
+(2547, 95, 20, 0.00),
+(2548, 114, 20, 0.00),
+(2549, 117, 20, 0.00),
+(2550, 120, 20, 0.00),
+(2551, 121, 20, 0.00),
+(2552, 123, 20, 0.00),
+(2553, 132, 20, 0.00),
+(2554, 135, 20, 0.00),
+(2555, 140, 20, 0.00),
+(2556, 141, 20, 0.00),
+(2557, 146, 20, 0.00),
+(2558, 147, 20, 0.00),
+(2559, 151, 20, 0.00),
+(2560, 159, 20, 0.00),
+(2561, 162, 20, 0.00),
+(2562, 166, 20, 0.00),
+(2563, 168, 20, 0.00),
+(2564, 177, 20, 0.00),
+(2565, 179, 20, 0.00),
+(2566, 181, 20, 0.00),
+(2567, 183, 20, 0.00),
+(2568, 184, 20, 0.00),
+(2569, 189, 20, 0.00),
+(2570, 191, 20, 0.00),
+(2571, 192, 20, 0.00),
+(2572, 193, 20, 0.00),
+(2573, 195, 20, 0.00),
+(2574, 200, 20, 0.00),
+(2575, 203, 20, 0.00),
+(2576, 1, 21, 0.00),
+(2577, 2, 21, 0.00),
+(2578, 7, 21, 0.00),
+(2579, 9, 21, 0.00),
+(2580, 11, 21, 0.00),
+(2581, 24, 21, 0.00),
+(2582, 27, 21, 0.00),
+(2583, 29, 21, 0.00),
+(2584, 48, 21, 0.00),
+(2585, 67, 21, 0.00),
+(2586, 70, 21, 0.00),
+(2587, 72, 21, 0.00),
+(2588, 76, 21, 0.00),
+(2589, 78, 21, 0.00),
+(2590, 81, 21, 0.00),
+(2591, 84, 21, 0.00),
+(2592, 85, 21, 0.00),
+(2593, 90, 21, 0.00),
+(2594, 91, 21, 0.00),
+(2595, 95, 21, 0.00),
+(2596, 114, 21, 0.00),
+(2597, 117, 21, 0.00),
+(2598, 120, 21, 0.00),
+(2599, 121, 21, 0.00),
+(2600, 123, 21, 0.00),
+(2601, 132, 21, 0.00),
+(2602, 135, 21, 0.00),
+(2603, 140, 21, 0.00),
+(2604, 141, 21, 0.00),
+(2605, 146, 21, 0.00),
+(2606, 147, 21, 0.00),
+(2607, 151, 21, 0.00),
+(2608, 159, 21, 0.00),
+(2609, 162, 21, 0.00),
+(2610, 166, 21, 0.00),
+(2611, 168, 21, 0.00),
+(2612, 177, 21, 0.00),
+(2613, 179, 21, 0.00),
+(2614, 181, 21, 0.00),
+(2615, 183, 21, 0.00),
+(2616, 184, 21, 0.00),
+(2617, 189, 21, 0.00),
+(2618, 191, 21, 0.00),
+(2619, 192, 21, 0.00),
+(2620, 193, 21, 0.00),
+(2621, 195, 21, 0.00),
+(2622, 200, 21, 0.00),
+(2623, 203, 21, 0.00);
 
 --
 -- Indexes for dumped tables
@@ -528,19 +698,19 @@ ALTER TABLE `notes`
 -- AUTO_INCREMENT for table `administrateurs`
 --
 ALTER TABLE `administrateurs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `etudiants`
 --
 ALTER TABLE `etudiants`
-  MODIFY `numero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=204;
+  MODIFY `numero` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=206;
 
 --
 -- AUTO_INCREMENT for table `evaluations`
 --
 ALTER TABLE `evaluations`
-  MODIFY `id_evaluation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id_evaluation` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `groupes`
@@ -558,7 +728,7 @@ ALTER TABLE `modules`
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id_note` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id_note` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2624;
 
 --
 -- Constraints for dumped tables
@@ -582,7 +752,8 @@ ALTER TABLE `module_groupe`
 -- Constraints for table `notes`
 --
 ALTER TABLE `notes`
-  ADD CONSTRAINT `notes_ibfk_2` FOREIGN KEY (`id_evaluation`) REFERENCES `evaluations` (`id_evaluation`) ON DELETE CASCADE;
+  ADD CONSTRAINT `notes_ibfk_1` FOREIGN KEY (`id_etudiant`) REFERENCES `etudiants` (`numero`),
+  ADD CONSTRAINT `notes_ibfk_2` FOREIGN KEY (`id_evaluation`) REFERENCES `evaluations` (`id_evaluation`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

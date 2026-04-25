@@ -158,106 +158,6 @@ $annee = "2025 / 2026";
     <title>Gestion des Notes — USTHB</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../prof-interface/style.css">
-    <style>
-        .dashboard-content { padding:30px; background:#f4f6fb; flex:1; color:#000; }
-
-        /* Stats */
-        .stats-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
-        .stat-card { background:#fff; border:1px solid #e0e4ef; border-radius:12px; padding:20px; }
-        .stat-card .stat-label { font-size:13px; color:#666; margin-bottom:8px; }
-        .stat-card .stat-value { font-size:32px; font-weight:600; color:#1a2a4a; font-family:'IBM Plex Mono',monospace; }
-        .stat-card .stat-sub   { font-size:12px; color:#999; margin-top:4px; }
-        .stat-card.blue   { border-top:3px solid #378ADD; }
-        .stat-card.teal   { border-top:3px solid #1D9E75; }
-        .stat-card.purple { border-top:3px solid #7F77DD; }
-
-        .section-title { font-size:11px; text-transform:uppercase; letter-spacing:.12em; color:#555; margin-bottom:16px; display:flex; align-items:center; gap:10px; }
-        .section-title::after { content:''; flex:1; height:1px; background:#ddd; }
-
-        /* Formulaire */
-        .form-card { background:#fff; border:1px solid #e0e4ef; border-radius:12px; padding:24px; margin-bottom:28px; }
-        .form-card h2 { font-size:15px; font-weight:600; color:#1a2a4a; margin-bottom:20px; }
-        .form-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
-        .form-group { display:flex; flex-direction:column; gap:6px; }
-        .form-group label { font-size:12px; font-weight:600; color:#555; text-transform:uppercase; letter-spacing:.05em; }
-        .form-group input, .form-group select { padding:10px 12px; border:1px solid #dde1ef; border-radius:8px; font-size:14px; font-family:'IBM Plex Sans',sans-serif; color:#1a2a4a; background:#f8faff; transition:border-color .2s; }
-        .form-group input:focus, .form-group select:focus { outline:none; border-color:#378ADD; background:#fff; }
-        .form-group select:disabled { opacity:.5; cursor:not-allowed; }
-        .form-actions { margin-top:20px; display:flex; gap:10px; align-items:center; }
-        .avg-preview { display:inline-flex; align-items:center; gap:8px; background:#f0f4ff; border:1px solid #c7d2f0; border-radius:8px; padding:8px 14px; font-size:13px; color:#32406d; font-weight:500; margin-top:16px; }
-        .avg-preview .avg-val { font-family:'IBM Plex Mono',monospace; font-size:16px; font-weight:600; color:#1a2a4a; }
-        .avg-preview.hidden { display:none; }
-
-        .btn { padding:10px 20px; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; border:none; display:inline-flex; align-items:center; gap:6px; font-family:'IBM Plex Sans',sans-serif; text-decoration:none; transition:all .2s; }
-        .btn-primary { background:#32406d; color:#fff; }
-        .btn-primary:hover { background:#1a2a4a; }
-        .btn-secondary { background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; }
-        .btn-secondary:hover { background:#e2e8f0; }
-
-        .alert { padding:12px 18px; border-radius:10px; font-size:14px; font-weight:500; display:flex; align-items:center; gap:10px; margin-bottom:20px; }
-        .alert-success { background:#e6f4ea; color:#1e6e30; border:1px solid #b6dfc0; }
-        .alert-error   { background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; }
-
-        /* Toolbar */
-        .toolbar { display:flex; align-items:center; gap:12px; flex-wrap:wrap; background:#fff; border:1px solid #e0e4ef; border-radius:12px; padding:14px 20px; margin-bottom:20px; }
-        .toolbar-group { display:flex; align-items:center; gap:8px; }
-        .toolbar-group label { font-size:12px; font-weight:600; color:#555; text-transform:uppercase; letter-spacing:.06em; white-space:nowrap; }
-        .toolbar-group input { padding:8px 12px; border:1px solid #dde1ef; border-radius:8px; font-size:14px; font-family:'IBM Plex Sans',sans-serif; color:#1a2a4a; background:#f8faff; min-width:200px; }
-        .toolbar-group input:focus { outline:none; border-color:#378ADD; background:#fff; }
-        .toolbar-sep { width:1px; height:28px; background:#e0e4ef; margin:0 4px; }
-        .toolbar-info { margin-left:auto; font-size:12px; color:#888; font-family:'IBM Plex Mono',monospace; }
-
-        /* Semestre chips */
-        .sem-chips { display:flex; gap:6px; flex-wrap:wrap; }
-        .sem-chip { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; border:1px solid #dde1ef; background:#f4f6fb; color:#555; text-decoration:none; transition:all .2s; font-family:'IBM Plex Sans',sans-serif; }
-        .sem-chip.active { background:#32406d; color:#fff; border-color:#32406d; }
-        .sem-chip:hover:not(.active) { background:#e0e4ef; }
-
-        /* Onglets */
-        .tabs-wrapper { background:#fff; border:1px solid #e0e4ef; border-radius:12px; overflow:hidden; margin-bottom:28px; }
-        .tab-bar { display:flex; border-bottom:2px solid #e0e4ef; padding:0 20px; }
-        .tab-btn { padding:14px 20px; font-size:13px; font-weight:600; cursor:pointer; background:none; border:none; color:#888; border-bottom:2px solid transparent; margin-bottom:-2px; transition:all .2s; font-family:'IBM Plex Sans',sans-serif; }
-        .tab-btn.active { color:#32406d; border-bottom-color:#32406d; }
-        .tab-btn:hover:not(.active) { color:#32406d; }
-        .tab-panel { display:none; padding:24px; }
-        .tab-panel.active { display:block; }
-
-        /* Cards */
-        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); gap:20px; }
-        .student-card { background:#f8faff; border:1px solid #e0e4ef; border-radius:12px; overflow:hidden; transition:box-shadow .2s; }
-        .student-card:hover { box-shadow:0 4px 20px rgba(50,64,109,.1); }
-        .card-header { background:#1a2a4a; padding:14px 18px; display:flex; align-items:center; justify-content:space-between; }
-        .card-name { font-size:14px; font-weight:600; color:#fff; }
-        .card-mat  { font-size:11px; color:#94a3c4; font-family:'IBM Plex Mono',monospace; margin-top:2px; }
-        .card-moy-badge { font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; padding:4px 12px; border-radius:20px; }
-        .card-moy-pass  { background:#22c55e; color:#fff; }
-        .card-moy-fail  { background:#ef4444; color:#fff; }
-        .card-moy-empty { background:#64748b; color:#fff; }
-        .card-body { padding:16px 18px; display:flex; flex-direction:column; gap:10px; }
-        .mod-block { background:#fff; border:1px solid #e8ecf4; border-radius:8px; padding:12px 14px; }
-        .mod-block-title { font-size:12px; font-weight:600; color:#32406d; display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
-        .mod-coef { font-size:10px; color:#888; font-family:'IBM Plex Mono',monospace; }
-        .notes-row { display:flex; gap:8px; flex-wrap:wrap; }
-        .note-chip { display:flex; flex-direction:column; align-items:center; background:#f4f6fb; border:1px solid #e0e4ef; border-radius:8px; padding:6px 10px; min-width:52px; }
-        .note-chip-label { font-size:9px; text-transform:uppercase; letter-spacing:.06em; color:#888; margin-bottom:3px; }
-        .note-chip-val   { font-size:13px; font-weight:600; font-family:'IBM Plex Mono',monospace; }
-        .note-chip-val.pass  { color:#16a34a; }
-        .note-chip-val.fail  { color:#dc2626; }
-        .note-chip-val.empty { color:#bbb; }
-        .note-chip.moy-chip  { background:#eff6ff; border-color:#bfdbfe; }
-        .note-chip.moy-chip .note-chip-label { color:#2563eb; }
-
-        /* Tableau moyennes */
-        .moy-table { width:100%; border-collapse:collapse; }
-        .moy-table th { background:#f4f6fb; color:#555; font-size:11px; text-transform:uppercase; letter-spacing:.06em; padding:12px 16px; text-align:left; border-bottom:2px solid #e0e4ef; }
-        .moy-table td { padding:12px 16px; border-bottom:1px solid #eee; font-size:14px; color:#000; }
-        .moy-table tr:last-child td { border-bottom:none; }
-        .moy-table tr:hover td { background:#f5f8ff; }
-        .badge-pass { display:inline-block; background:#e6f4ea; color:#2d7a3a; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; font-family:'IBM Plex Mono',monospace; }
-        .badge-fail { display:inline-block; background:#fee2e2; color:#b91c1c; padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; font-family:'IBM Plex Mono',monospace; }
-        .rank-cell { font-family:'IBM Plex Mono',monospace; font-size:13px; color:#888; text-align:center; }
-        .empty-state { text-align:center; color:#888; padding:40px; font-size:14px; }
-    </style>
 </head>
 <body>
 
@@ -273,8 +173,8 @@ $annee = "2025 / 2026";
     </div>
     <hr><br>
     <a href="acceuille1.php"              class="<?= $currentPage=='acceuille1.php'?'active':'' ?>">Accueil</a>
-    <a href="Gestion des modules.php"     class="<?= $currentPage=='Gestion des modules.php'?'active':'' ?>">Gérer les modules</a>
-    <a href="gestion_notes.php"           class="<?= $currentPage=='gestion_notes.php'?'active':'' ?>">Gérer les notes</a>
+    <a href="Gestion_des_modules.php"     class="<?= $currentPage=='Gestion_des_modules.php'?'active':'' ?>">Gérer les modules</a>
+    <a href="Gestion_des_notes.php"           class="<?= $currentPage=='Gestion_des_notes.php'?'active':'' ?>">Gérer les notes</a>
     <a href="Gestion_des_enseignants.php" class="<?= $currentPage=='Gestion_des_enseignants.php'?'active':'' ?>">Gérer les enseignants</a>
     <a href="gestiondesetudiants.php"     class="<?= $currentPage=='gestiondesetudiants.php'?'active':'' ?>">Gérer les étudiants</a>
     <a href="logout.php"                  class="<?= $currentPage=='logout.php'?'active':'' ?>">Déconnexion</a>

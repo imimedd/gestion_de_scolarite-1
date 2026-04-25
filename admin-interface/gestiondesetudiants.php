@@ -79,8 +79,8 @@ $annee = date("Y") . " / " . (date("Y") + 1);
     </div>
     <hr><br>
     <a href="acceuille1.php"              class="<?= $currentPage == 'acceuille1.php' ? 'active' : '' ?>">Accueil</a>
-    <a href="Gestion des modules.php"     class="<?= $currentPage == 'Gestion des modules.php' ? 'active' : '' ?>">Gérer les modules</a>
-    <a href="Gestion des notes.php"       class="<?= $currentPage == 'Gestion_des_notes.php' ? 'active' : '' ?>">Gérer les notes</a>
+    <a href="Gestion_des_modules.php"     class="<?= $currentPage == 'Gestion_des_modules.php' ? 'active' : '' ?>">Gérer les modules</a>
+    <a href="Gestion_des_notes.php"       class="<?= $currentPage == 'Gestion_des_notes.php' ? 'active' : '' ?>">Gérer les notes</a>
     <a href="Gestion_des_enseignants.php" class="<?= $currentPage == 'Gestion_des_enseignants.php' ? 'active' : '' ?>">Gérer les enseignants</a>
     <a href="gestiondesetudiants.php"     class="<?= strtolower($currentPage) == 'gestiondesetudiants.php' ? 'active' : '' ?>">Gérer les étudiants</a>
     <a href="logout.php"                  class="<?= $currentPage == 'logout.php' ? 'active' : '' ?>">Déconnexion</a>

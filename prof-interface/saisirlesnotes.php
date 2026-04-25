@@ -2,7 +2,12 @@
 session_start();
 require_once("../connexion.php");
 
-$annee       = "2025 / 2026";
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+$annee       = date("Y") . " / " . (date("Y") + 1);
 $currentPage = basename($_SERVER['PHP_SELF']);
 
 // Semestres disponibles
@@ -82,110 +87,121 @@ $success = isset($_GET['success']) && $_GET['success'] == 1;
     <title>Saisir les notes — Enseignant</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <style>
-        .moyenne-cell{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;padding:4px 10px;border-radius:20px;display:inline-block;}
-        .moyenne-pass{background:#e6f4ea;color:#2d7a3a;}
-        .moyenne-fail{background:#fee2e2;color:#b91c1c;}
-        .moyenne-empty{background:#f1f5f9;color:#888;}
-    </style>
+        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+        
+        .student-card input[type="number"] {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #dde1ef;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            font-family: 'IBM Plex Mono', monospace;
+            background: #f8faff;
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+        .student-card input[type="number"]:focus {
+            outline: none;
+            border-color: #378ADD;
+            background: #fff;
+        }
 </head>
 <body>
+
 <div class="sidebar">
     <div style="text-align:center;">
         <img src="img/usthb1.png" width="100" height="100"/>
-        <p><font color="#ffffff"><font size="3"><center><b>usthb - Enseignant</b></center></font></font></p>
+        <p><font color="#ffffff"><font size="3"><center><b>USTHB — Enseignant</b></center></font></font></p>
     </div>
     <br><hr>
     <div style="display:flex;align-items:center;">
         <img src="img/prof.png" width="90" height="90"/>
-        <center><font color="#ffffff"><font size="3"><?= $_SESSION['prenom'].' '.$_SESSION['nom'] ?></font></font></center>
+        <center><font color="#ffffff"><font size="3"><?= htmlspecialchars(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? '')) ?></font></font></center>
     </div>
     <hr><br>
-    <a href="index.php" class="<?= $currentPage=='index.php'?'active':'' ?>">Accueil</a>
-    <a href="MesModules.php" class="<?= $currentPage=='MesModules.php'?'active':'' ?>">Mes Modules</a>
-    <a href="saisirlesnotes.php" class="<?= $currentPage=='saisirlesnotes.php'?'active':'' ?>">Saisir les notes</a>
-    <a href="listeDesEtudiants.php" class="<?= $currentPage=='listeDesEtudiants.php'?'active':'' ?>">Liste des étudiants</a>
-    <a href="logout.php" class="<?= $currentPage=='logout.php'?'active':'' ?>">Déconnexion</a>
+    <a href="acceuille.php"           class="<?= $currentPage=='acceuille.php'?'active':'' ?>">Accueil</a>
+    <a href="MesModules.php"          class="<?= $currentPage=='MesModules.php'?'active':'' ?>">Mes Modules</a>
+    <a href="saisirlesnotes.php"      class="<?= $currentPage=='saisirlesnotes.php'?'active':'' ?>">Saisir les notes</a>
+    <a href="listeDesEtudiants.php"   class="<?= $currentPage=='listeDesEtudiants.php'?'active':'' ?>">Liste des étudiants</a>
+    <a href="logout.php"              class="<?= $currentPage=='logout.php'?'active':'' ?>">Déconnexion</a>
 </div>
 
 <div class="main">
     <div class="header">
         <div class="header-left">
-            <div class="header-icon">📄</div>
+            <div class="header-icon">✍️</div>
             <p style="color:#000;font-size:16px;">Saisir les notes — <span style="color:#888;font-weight:300;">Enseignant</span></p>
         </div>
         <div class="year-badge"><?= $annee ?></div>
     </div>
-    <div class="content">
+    
+    <div class="page-content">
         <?php if($success): ?>
-            <div class="success">✅ Notes enregistrées avec succès !</div>
+            <div class="alert alert-success">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Notes enregistrées avec succès !
+            </div>
         <?php endif; ?>
 
-        <form method="GET" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
-            <div style="display:flex;gap:24px;align-items:flex-end;flex-wrap:wrap;margin-bottom:20px;">
+        <form method="GET" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" class="toolbar">
+            <div class="toolbar-group">
+                <label>Semestre</label>
+                <select name="semestre" onchange="this.form.submit()" style="padding:8px 12px; border:1px solid #dde1ef; border-radius:8px;">
+                    <?php foreach($semestres_dispo as $s): ?>
+                        <option value="<?= $s ?>" <?= $semestre_choisi==$s?'selected':'' ?>><?= htmlspecialchars($s) ?></option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div class="toolbar-sep"></div>
 
-                <div style="display:flex;flex-direction:column;gap:4px;">
-                    <div class="section-title">semestre</div>
-                    <select name="semestre" onchange="this.form.submit()">
-                        <?php foreach($semestres_dispo as $s): ?>
-                            <option value="<?= $s ?>" <?= $semestre_choisi==$s?'selected':'' ?>><?= htmlspecialchars($s) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+            <div class="toolbar-group">
+                <label>Module</label>
+                <select name="module" onchange="this.form.submit()" style="padding:8px 12px; border:1px solid #dde1ef; border-radius:8px;">
+                    <?php foreach($modules as $m): ?>
+                        <option value="<?= $m['id_module'] ?>" <?= $module_choisi_id==$m['id_module']?'selected':'' ?>>
+                            <?= htmlspecialchars($m['nom_module']) ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+            
+            <div class="toolbar-sep"></div>
 
-                <div style="display:flex;flex-direction:column;gap:4px;">
-                    <div class="section-title">module</div>
-                    <select name="module" onchange="this.form.submit()">
-                        <?php foreach($modules as $m): ?>
-                            <option value="<?= $m['id_module'] ?>" <?= $module_choisi_id==$m['id_module']?'selected':'' ?>>
-                                <?= htmlspecialchars($m['nom_module']) ?> (coef <?= $m['coef'] ?>)
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+            <div class="toolbar-group">
+                <label>Groupe</label>
+                <select name="groupe" onchange="this.form.submit()" style="padding:8px 12px; border:1px solid #dde1ef; border-radius:8px;">
+                    <?php if(empty($groupes)): ?>
+                        <option value="">— Aucun —</option>
+                    <?php else: foreach($groupes as $g): ?>
+                        <option value="<?= $g['id_groupe'] ?>" <?= $groupe_choisi_id==$g['id_groupe']?'selected':'' ?>><?= htmlspecialchars($g['nom_groupe']) ?></option>
+                    <?php endforeach; endif; ?>
+                </select>
+            </div>
+            
+            <div class="toolbar-sep"></div>
 
-                <div style="display:flex;flex-direction:column;gap:4px;">
-                    <div class="section-title">groupe</div>
-                    <select name="groupe" onchange="this.form.submit()">
-                        <?php if(empty($groupes)): ?>
-                            <option value="">— Aucun groupe —</option>
-                        <?php else: foreach($groupes as $g): ?>
-                            <option value="<?= $g['id_groupe'] ?>" <?= $groupe_choisi_id==$g['id_groupe']?'selected':'' ?>><?= htmlspecialchars($g['nom_groupe']) ?></option>
-                        <?php endforeach; endif; ?>
-                    </select>
-                </div>
+            <div class="toolbar-group" style="flex:1;">
+                <input type="text" name="recherche" placeholder="Rechercher nom/matricule..." value="<?= htmlspecialchars($recherche) ?>" style="width:100%;">
+            </div>
 
-                <div style="display:flex;flex-direction:column;gap:4px;">
-                    <div class="section-title">recherche</div>
-                    <input type="text" name="recherche" placeholder="Nom ou matricule..."
-                        value="<?= htmlspecialchars($recherche) ?>"
-                        style="padding:8px;border-radius:4px;border:1px solid #ccc;font-size:14px;min-width:200px;">
-                </div>
-
-               
-
-                <div style="display:flex;flex-direction:column;gap:4px;justify-content:flex-end;">
-                    <button type="submit" style="padding:8px 16px;background:#1a2a4a;color:white;border:none;border-radius:4px;cursor:pointer;">Rechercher</button>
-                </div>
+            <div class="toolbar-group">
+                <button type="submit" class="btn btn-secondary">Rechercher</button>
             </div>
         </form>
 
         <?php if(empty($etudiants)): ?>
-            <p class="no-data">Aucun étudiant trouvé.</p>
+            <div class="table-card">
+                <div class="empty-state">Aucun étudiant trouvé pour ces critères.</div>
+            </div>
         <?php else: ?>
         <form method="POST" action="enregistrer_notes.php">
             <input type="hidden" name="module" value="<?= $module_choisi_id ?>">
             <input type="hidden" name="groupe" value="<?= $groupe_choisi_id ?>">
             <input type="hidden" name="semestre" value="<?= htmlspecialchars($semestre_choisi) ?>">
-            <table>
-                <thead>
-                    <tr>
-                        <th>#</th><th>Matricule</th><th>Nom</th><th>Prénom</th>
-                        <th>Contrôle 1 /20</th><th>Contrôle 2 /20</th><th>TP /20</th><th>Examen /20</th>
-                        <th>Moyenne module</th>
-                    </tr>
-                </thead>
-                <tbody>
+            
+            <div class="cards-grid">
                 <?php foreach($etudiants as $i => $etudiant): ?>
                 <?php
                     $mat    = $etudiant['matricule'];
@@ -195,42 +211,69 @@ $success = isset($_GET['success']) && $_GET['success'] == 1;
                     $examen = $notes_existantes[$mat]['examen'] ?? null;
                     $moy    = calculMoyenne([$cc1,$cc2,$tp,$examen]);
                 ?>
-                <tr>
-                    <td><?= $i+1 ?></td>
-                    <td><?= htmlspecialchars($mat) ?></td>
-                    <td><?= htmlspecialchars($etudiant['nom']) ?></td>
-                    <td><?= htmlspecialchars($etudiant['prenom']) ?></td>
-                    <td><input type="number" name="cc1[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $cc1??'' ?>" oninput="updateMoy(this.closest('tr'))"></td>
-                    <td><input type="number" name="cc2[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $cc2??'' ?>" oninput="updateMoy(this.closest('tr'))"></td>
-                    <td><input type="number" name="tp[<?= $mat ?>]"  min="0" max="20" step="0.25" placeholder="—" value="<?= $tp??'' ?>"  oninput="updateMoy(this.closest('tr'))"></td>
-                    <td><input type="number" name="examen[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $examen??'' ?>" oninput="updateMoy(this.closest('tr'))"></td>
-                    <td class="moy-cell">
-                        <?php if($moy!==null): ?>
-                            <span class="moyenne-cell <?= $moy>=10?'moyenne-pass':'moyenne-fail' ?>"><?= $moy ?> / 20</span>
-                        <?php else: ?>
-                            <span class="moyenne-cell moyenne-empty">—</span>
-                        <?php endif; ?>
-                    </td>
-                </tr>
+                <div class="student-card" style="background:#fff; border:1px solid #e0e4ef; border-radius:12px; overflow:hidden;">
+                    <div class="card-header" style="background:#1a2a4a; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+                        <div>
+                            <div class="card-name" style="font-size:14px; font-weight:600; color:#fff;"><?= htmlspecialchars($etudiant['nom'].' '.$etudiant['prenom']) ?></div>
+                            <div class="card-mat" style="font-size:11px; color:#94a3c4; font-family:'IBM Plex Mono',monospace; margin-top:2px;"><?= htmlspecialchars($mat) ?></div>
+                        </div>
+                        <span class="card-moy-badge moy-cell-preview <?= $moy>=10?'card-moy-pass':($moy!==null?'card-moy-fail':'card-moy-empty') ?>" style="font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; padding:4px 12px; border-radius:20px; <?= $moy>=10?'background:#22c55e;color:#fff;':($moy!==null?'background:#ef4444;color:#fff;':'background:#64748b;color:#fff;') ?>">
+                            <?= $moy!==null ? $moy.'/20' : '—/20' ?>
+                        </span>
+                    </div>
+                    <div class="card-body" style="padding:16px 18px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">CC 1</label>
+                                <input type="number" name="cc1[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $cc1??'' ?>" oninput="updateMoyCard(this.closest('.student-card'))">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">CC 2</label>
+                                <input type="number" name="cc2[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $cc2??'' ?>" oninput="updateMoyCard(this.closest('.student-card'))">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">TP</label>
+                                <input type="number" name="tp[<?= $mat ?>]"  min="0" max="20" step="0.25" placeholder="—" value="<?= $tp??'' ?>"  oninput="updateMoyCard(this.closest('.student-card'))">
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:4px;">
+                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">Examen</label>
+                                <input type="number" name="examen[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $examen??'' ?>" oninput="updateMoyCard(this.closest('.student-card'))">
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <?php endforeach; ?>
-                </tbody>
-            </table>
-            <button type="submit" class="btn-save">💾 Enregistrer les notes</button>
+            </div>
+            
+            <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Enregistrer les notes
+                </button>
+            </div>
         </form>
         <?php endif; ?>
     </div>
 </div>
 
 <script>
-function updateMoy(row) {
-    const inputs = row.querySelectorAll('input[type="number"]');
+function updateMoyCard(card) {
+    const inputs = card.querySelectorAll('input[type="number"]');
     const vals = [];
     inputs.forEach(inp => { const v=parseFloat(inp.value); if(!isNaN(v)) vals.push(v); });
-    const cell = row.querySelector('.moy-cell');
-    if(vals.length===0){ cell.innerHTML='<span class="moyenne-cell moyenne-empty">—</span>'; return; }
+    const badge = card.querySelector('.moy-cell-preview');
+    if(vals.length===0){ 
+        badge.innerHTML='—/20';
+        badge.style.background='#64748b';
+        return; 
+    }
     const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
-    const cls = avg>=10?'moyenne-pass':'moyenne-fail';
-    cell.innerHTML=`<span class="moyenne-cell ${cls}">${avg} / 20</span>`;
+    badge.innerHTML = avg + '/20';
+    if(avg >= 10) {
+        badge.style.background = '#22c55e';
+    } else {
+        badge.style.background = '#ef4444';
+    }
 }
 </script>
 </body>

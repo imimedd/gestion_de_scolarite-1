@@ -20,85 +20,6 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
     <title>Accueil — Administrateur</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../prof-interface/style.css">
-    <style>
-        .dashboard-content {
-            padding: 30px;
-            background: #f4f6fb;
-            flex: 1;
-            color: #000;
-        }
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 28px;
-        }
-        .stat-card {
-            background: #ffffff;
-            border: 1px solid #e0e4ef;
-            border-radius: 12px;
-            padding: 20px;
-        }
-        .stat-card .stat-label {
-            font-size: 13px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-        .stat-card .stat-value {
-            font-size: 32px;
-            font-weight: 600;
-            color: #1a2a4a;
-            font-family: 'IBM Plex Mono', monospace;
-        }
-        .stat-card .stat-sub {
-            font-size: 12px;
-            color: #999;
-            margin-top: 4px;
-        }
-        .stat-card.blue   { border-top: 3px solid #378ADD; }
-        .stat-card.teal   { border-top: 3px solid #1D9E75; }
-        .stat-card.purple { border-top: 3px solid #7F77DD; }
-
-        .table-card {
-            background: #ffffff;
-            border: 1px solid #e0e4ef;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        .table-card-header {
-            padding: 14px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            color: #1a2a4a;
-            border-bottom: 1px solid #e0e4ef;
-        }
-        .table-card table { margin-top: 0; border-radius: 0; }
-        .table-card th {
-            background: #f4f6fb;
-            color: #555;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
-        }
-        .badge-actif {
-            display: inline-block;
-            background: #e6f4ea;
-            color: #2d7a3a;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-        .badge-inactif {
-            display: inline-block;
-            background: #f1efea;
-            color: #5f5e5a;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-    </style>
 </head>
 <body>
 
@@ -115,8 +36,8 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
     </div>
     <hr><br>
     <a href="acceuille1.php"              class="<?php if($currentPage == 'acceuille1.php') echo 'active'; ?>">Accueil</a>
-    <a href="Gestion des modules.php"     class="<?php if($currentPage == 'Gestion des modules.php') echo 'active'; ?>">Gérer les modules</a>
-    <a href="Gestion des notes.php"       class="<?php if($currentPage == 'Gestion_des_notes.php') echo 'active'; ?>">Gérer les notes</a>
+    <a href="Gestion_des_modules.php"     class="<?php if($currentPage == 'Gestion_des_modules.php') echo 'active'; ?>">Gérer les modules</a>
+    <a href="Gestion_des_notes.php"       class="<?php if($currentPage == 'Gestion_des_notes.php') echo 'active'; ?>">Gérer les notes</a>
     <a href="Gestion_des_enseignants.php" class="<?php if($currentPage == 'Gestion_des_enseignants.php') echo 'active'; ?>">Gérer les enseignants</a>
     <a href="gestiondesetudiants.php"     class="<?php if($currentPage == 'gestiondesetudiants.php') echo 'active'; ?>">Gérer les étudiants</a>
     <a href="logout.php"                  class="<?php if($currentPage == 'logout.php') echo 'active'; ?>">Déconnexion</a>
@@ -158,7 +79,7 @@ $etudiants = $pdo->query("SELECT numero, nom, prenom, groupe_td, section, etat F
 
         <div class="table-card">
             <div class="table-card-header">Étudiants récents</div>
-            <table class="table2">
+            <table>
                 <thead>
                     <tr>
                         <th>Numéro</th>
