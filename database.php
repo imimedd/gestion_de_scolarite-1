@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$dbname = "gestion_scolarite";
+$dbname = "usthb_enseignant";
 $username = "root";
 $password = "";
 
