@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'scolarite';
+$dbname = 'gestion_scolarite';
 $username = 'root';
 $password = '';
 

@@ -116,7 +116,7 @@ if (isset($_GET['ajax'])) {
 // ======================================
 
 // Étudiants pour la liste principale
-$etudiants = $pdo->query("SELECT id_etudiant, matricule, nom, prenom FROM etudiants ORDER BY nom ASC")->fetchAll(PDO::FETCH_ASSOC);
+$etudiants = $pdo->query("SELECT numero, matricule, nom, prenom FROM etudiants ORDER BY nom ASC")->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>

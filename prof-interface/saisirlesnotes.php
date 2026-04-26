@@ -87,9 +87,16 @@ $success = isset($_GET['success']) && $_GET['success'] == 1;
     <title>Saisir les notes — Enseignant</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-        .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
-        
-        .student-card input[type="number"] {
+    <style>
+        /* ── Cards grille ── */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        /* ── Inputs notes dans les cards ── */
+        .note-input {
             width: 100%;
             padding: 8px 10px;
             border: 1px solid #dde1ef;
@@ -98,182 +105,309 @@ $success = isset($_GET['success']) && $_GET['success'] == 1;
             text-align: center;
             font-family: 'IBM Plex Mono', monospace;
             background: #f8faff;
-            transition: all 0.2s;
+            transition: border-color 0.2s, background 0.2s;
             box-sizing: border-box;
         }
-        .student-card input[type="number"]:focus {
+
+        .note-input:focus {
             outline: none;
             border-color: #378ADD;
             background: #fff;
         }
+
+        /* ── Grille 2 colonnes à l'intérieur d'une card ── */
+        .notes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .note-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .note-field label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* ── État vide ── */
+        .empty-state {
+            padding: 40px;
+            text-align: center;
+            color: #888;
+            font-size: 15px;
+        }
+
+        /* ── Sidebar : infos prof ── */
+        .sidebar-prof {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+        }
+
+        .sidebar-prof span {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .sidebar-title {
+            text-align: center;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            padding: 8px 20px 0;
+        }
+
+        .sidebar-logo {
+            text-align: center;
+            padding: 0 20px 10px;
+        }
+
+        .sidebar-divider {
+            border: none;
+            border-top: 1px solid rgba(255,255,255,0.15);
+            margin: 10px 20px;
+        }
+
+        /* ── Bouton enregistrer aligné à droite ── */
+        .submit-row {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-end;
+        }
+    </style>
 </head>
 <body>
 
+<!-- ===================== SIDEBAR ===================== -->
 <div class="sidebar">
-    <div style="text-align:center;">
-        <img src="img/usthb1.png" width="100" height="100"/>
-        <p><font color="#ffffff"><font size="3"><center><b>USTHB — Enseignant</b></center></font></font></p>
+    <div class="sidebar-logo">
+        <img src="img/usthb1.png" width="100" height="100" alt="USTHB">
     </div>
-    <br><hr>
-    <div style="display:flex;align-items:center;">
-        <img src="img/prof.png" width="90" height="90"/>
-        <center><font color="#ffffff"><font size="3"><?= htmlspecialchars(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? '')) ?></font></font></center>
+    <p class="sidebar-title">USTHB — Enseignant</p>
+    <hr class="sidebar-divider">
+    <div class="sidebar-prof">
+        <img src="img/prof.png" width="50" height="50" alt="Profil" style="border-radius:50%;">
+        <span><?= htmlspecialchars(($_SESSION['prenom'] ?? '') . ' ' . ($_SESSION['nom'] ?? '')) ?></span>
     </div>
-    <hr><br>
-    <a href="acceuille.php"           class="<?= $currentPage=='acceuille.php'?'active':'' ?>">Accueil</a>
-    <a href="MesModules.php"          class="<?= $currentPage=='MesModules.php'?'active':'' ?>">Mes Modules</a>
-    <a href="saisirlesnotes.php"      class="<?= $currentPage=='saisirlesnotes.php'?'active':'' ?>">Saisir les notes</a>
-    <a href="listeDesEtudiants.php"   class="<?= $currentPage=='listeDesEtudiants.php'?'active':'' ?>">Liste des étudiants</a>
-    <a href="logout.php"              class="<?= $currentPage=='logout.php'?'active':'' ?>">Déconnexion</a>
+    <hr class="sidebar-divider">
+    <a href="acceuille.php"         class="<?= $currentPage=='acceuille.php'        ?'active':'' ?>">Accueil</a>
+    <a href="MesModules.php"        class="<?= $currentPage=='MesModules.php'       ?'active':'' ?>">Mes Modules</a>
+    <a href="saisirlesnotes.php"    class="<?= $currentPage=='saisirlesnotes.php'   ?'active':'' ?>">Saisir les notes</a>
+    <a href="listeDesEtudiants.php" class="<?= $currentPage=='listeDesEtudiants.php'?'active':'' ?>">Liste des étudiants</a>
+    <a href="logout.php"            class="btn-deconnexion">Déconnexion</a>
 </div>
 
+<!-- ===================== MAIN ===================== -->
 <div class="main">
+
+    <!-- Header -->
     <div class="header">
         <div class="header-left">
             <div class="header-icon">✍️</div>
-            <p style="color:#000;font-size:16px;">Saisir les notes — <span style="color:#888;font-weight:300;">Enseignant</span></p>
+            <p style="color:#000; font-size:16px;">
+                Saisir les notes — <span style="color:#888; font-weight:300;">Enseignant</span>
+            </p>
         </div>
         <div class="year-badge"><?= $annee ?></div>
     </div>
-    
+
     <div class="page-content">
-        <?php if($success): ?>
+
+        <!-- Alerte succès -->
+        <?php if ($success): ?>
             <div class="alert alert-success">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
                 Notes enregistrées avec succès !
             </div>
         <?php endif; ?>
 
+        <!-- Toolbar filtres -->
         <form method="GET" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>" class="toolbar">
+
             <div class="toolbar-group">
                 <label>Semestre</label>
                 <select name="semestre" onchange="this.form.submit()" style="padding:8px 12px; border:1px solid #dde1ef; border-radius:8px;">
-                    <?php foreach($semestres_dispo as $s): ?>
-                        <option value="<?= $s ?>" <?= $semestre_choisi==$s?'selected':'' ?>><?= htmlspecialchars($s) ?></option>
+                    <?php foreach ($semestres_dispo as $s): ?>
+                        <option value="<?= $s ?>" <?= $semestre_choisi == $s ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($s) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            
+
             <div class="toolbar-sep"></div>
 
             <div class="toolbar-group">
                 <label>Module</label>
                 <select name="module" onchange="this.form.submit()" style="padding:8px 12px; border:1px solid #dde1ef; border-radius:8px;">
-                    <?php foreach($modules as $m): ?>
-                        <option value="<?= $m['id_module'] ?>" <?= $module_choisi_id==$m['id_module']?'selected':'' ?>>
+                    <?php foreach ($modules as $m): ?>
+                        <option value="<?= $m['id_module'] ?>" <?= $module_choisi_id == $m['id_module'] ? 'selected' : '' ?>>
                             <?= htmlspecialchars($m['nom_module']) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            
+
             <div class="toolbar-sep"></div>
 
             <div class="toolbar-group">
                 <label>Groupe</label>
                 <select name="groupe" onchange="this.form.submit()" style="padding:8px 12px; border:1px solid #dde1ef; border-radius:8px;">
-                    <?php if(empty($groupes)): ?>
+                    <?php if (empty($groupes)): ?>
                         <option value="">— Aucun —</option>
-                    <?php else: foreach($groupes as $g): ?>
-                        <option value="<?= $g['id_groupe'] ?>" <?= $groupe_choisi_id==$g['id_groupe']?'selected':'' ?>><?= htmlspecialchars($g['nom_groupe']) ?></option>
+                    <?php else: foreach ($groupes as $g): ?>
+                        <option value="<?= $g['id_groupe'] ?>" <?= $groupe_choisi_id == $g['id_groupe'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($g['nom_groupe']) ?>
+                        </option>
                     <?php endforeach; endif; ?>
                 </select>
             </div>
-            
+
             <div class="toolbar-sep"></div>
 
             <div class="toolbar-group" style="flex:1;">
-                <input type="text" name="recherche" placeholder="Rechercher nom/matricule..." value="<?= htmlspecialchars($recherche) ?>" style="width:100%;">
+                <input type="text" name="recherche"
+                       placeholder="Rechercher nom/matricule..."
+                       value="<?= htmlspecialchars($recherche) ?>"
+                       style="width:100%;">
             </div>
 
             <div class="toolbar-group">
                 <button type="submit" class="btn btn-secondary">Rechercher</button>
             </div>
+
         </form>
 
-        <?php if(empty($etudiants)): ?>
+        <!-- Contenu principal -->
+        <?php if (empty($etudiants)): ?>
             <div class="table-card">
                 <div class="empty-state">Aucun étudiant trouvé pour ces critères.</div>
             </div>
         <?php else: ?>
+
         <form method="POST" action="enregistrer_notes.php">
-            <input type="hidden" name="module" value="<?= $module_choisi_id ?>">
-            <input type="hidden" name="groupe" value="<?= $groupe_choisi_id ?>">
+            <input type="hidden" name="module"   value="<?= $module_choisi_id ?>">
+            <input type="hidden" name="groupe"   value="<?= $groupe_choisi_id ?>">
             <input type="hidden" name="semestre" value="<?= htmlspecialchars($semestre_choisi) ?>">
-            
+
             <div class="cards-grid">
-                <?php foreach($etudiants as $i => $etudiant): ?>
-                <?php
+                <?php foreach ($etudiants as $etudiant):
                     $mat    = $etudiant['matricule'];
                     $cc1    = $notes_existantes[$mat]['cc1']    ?? null;
                     $cc2    = $notes_existantes[$mat]['cc2']    ?? null;
                     $tp     = $notes_existantes[$mat]['tp']     ?? null;
                     $examen = $notes_existantes[$mat]['examen'] ?? null;
-                    $moy    = calculMoyenne([$cc1,$cc2,$tp,$examen]);
+                    $moy    = calculMoyenne([$cc1, $cc2, $tp, $examen]);
+
+                    if ($moy === null) {
+                        $badge_class = 'card-moy-empty';
+                    } elseif ($moy >= 10) {
+                        $badge_class = 'card-moy-pass';
+                    } else {
+                        $badge_class = 'card-moy-fail';
+                    }
                 ?>
-                <div class="student-card" style="background:#fff; border:1px solid #e0e4ef; border-radius:12px; overflow:hidden;">
-                    <div class="card-header" style="background:#1a2a4a; padding:14px 18px; display:flex; align-items:center; justify-content:space-between;">
+                <div class="student-card">
+                    <div class="card-header">
                         <div>
-                            <div class="card-name" style="font-size:14px; font-weight:600; color:#fff;"><?= htmlspecialchars($etudiant['nom'].' '.$etudiant['prenom']) ?></div>
-                            <div class="card-mat" style="font-size:11px; color:#94a3c4; font-family:'IBM Plex Mono',monospace; margin-top:2px;"><?= htmlspecialchars($mat) ?></div>
+                            <div class="card-name"><?= htmlspecialchars($etudiant['nom'] . ' ' . $etudiant['prenom']) ?></div>
+                            <div class="card-mat"><?= htmlspecialchars($mat) ?></div>
                         </div>
-                        <span class="card-moy-badge moy-cell-preview <?= $moy>=10?'card-moy-pass':($moy!==null?'card-moy-fail':'card-moy-empty') ?>" style="font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:600; padding:4px 12px; border-radius:20px; <?= $moy>=10?'background:#22c55e;color:#fff;':($moy!==null?'background:#ef4444;color:#fff;':'background:#64748b;color:#fff;') ?>">
-                            <?= $moy!==null ? $moy.'/20' : '—/20' ?>
+                        <span class="card-moy-badge moy-cell-preview <?= $badge_class ?>">
+                            <?= $moy !== null ? $moy . '/20' : '—/20' ?>
                         </span>
                     </div>
-                    <div class="card-body" style="padding:16px 18px;">
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">CC 1</label>
-                                <input type="number" name="cc1[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $cc1??'' ?>" oninput="updateMoyCard(this.closest('.student-card'))">
+
+                    <div class="card-body">
+                        <div class="notes-grid">
+                            <div class="note-field">
+                                <label>CC 1</label>
+                                <input class="note-input" type="number"
+                                       name="cc1[<?= $mat ?>]"
+                                       min="0" max="20" step="0.25"
+                                       placeholder="—"
+                                       value="<?= $cc1 ?? '' ?>"
+                                       oninput="updateMoyCard(this.closest('.student-card'))">
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">CC 2</label>
-                                <input type="number" name="cc2[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $cc2??'' ?>" oninput="updateMoyCard(this.closest('.student-card'))">
+                            <div class="note-field">
+                                <label>CC 2</label>
+                                <input class="note-input" type="number"
+                                       name="cc2[<?= $mat ?>]"
+                                       min="0" max="20" step="0.25"
+                                       placeholder="—"
+                                       value="<?= $cc2 ?? '' ?>"
+                                       oninput="updateMoyCard(this.closest('.student-card'))">
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">TP</label>
-                                <input type="number" name="tp[<?= $mat ?>]"  min="0" max="20" step="0.25" placeholder="—" value="<?= $tp??'' ?>"  oninput="updateMoyCard(this.closest('.student-card'))">
+                            <div class="note-field">
+                                <label>TP</label>
+                                <input class="note-input" type="number"
+                                       name="tp[<?= $mat ?>]"
+                                       min="0" max="20" step="0.25"
+                                       placeholder="—"
+                                       value="<?= $tp ?? '' ?>"
+                                       oninput="updateMoyCard(this.closest('.student-card'))">
                             </div>
-                            <div style="display:flex; flex-direction:column; gap:4px;">
-                                <label style="font-size:11px; font-weight:600; color:#555; text-transform:uppercase;">Examen</label>
-                                <input type="number" name="examen[<?= $mat ?>]" min="0" max="20" step="0.25" placeholder="—" value="<?= $examen??'' ?>" oninput="updateMoyCard(this.closest('.student-card'))">
+                            <div class="note-field">
+                                <label>Examen</label>
+                                <input class="note-input" type="number"
+                                       name="examen[<?= $mat ?>]"
+                                       min="0" max="20" step="0.25"
+                                       placeholder="—"
+                                       value="<?= $examen ?? '' ?>"
+                                       oninput="updateMoyCard(this.closest('.student-card'))">
                             </div>
                         </div>
                     </div>
                 </div>
                 <?php endforeach; ?>
             </div>
-            
-            <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+
+            <div class="submit-row">
                 <button type="submit" class="btn btn-primary">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                        <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                        <polyline points="7 3 7 8 15 8"></polyline>
+                    </svg>
                     Enregistrer les notes
                 </button>
             </div>
         </form>
+
         <?php endif; ?>
-    </div>
-</div>
+    </div><!-- /page-content -->
+</div><!-- /main -->
 
 <script>
 function updateMoyCard(card) {
     const inputs = card.querySelectorAll('input[type="number"]');
-    const vals = [];
-    inputs.forEach(inp => { const v=parseFloat(inp.value); if(!isNaN(v)) vals.push(v); });
+    const vals   = [];
+    inputs.forEach(inp => {
+        const v = parseFloat(inp.value);
+        if (!isNaN(v)) vals.push(v);
+    });
+
     const badge = card.querySelector('.moy-cell-preview');
-    if(vals.length===0){ 
-        badge.innerHTML='—/20';
-        badge.style.background='#64748b';
-        return; 
+    if (vals.length === 0) {
+        badge.textContent   = '—/20';
+        badge.className     = 'card-moy-badge moy-cell-preview card-moy-empty';
+        return;
     }
-    const avg = (vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2);
-    badge.innerHTML = avg + '/20';
-    if(avg >= 10) {
-        badge.style.background = '#22c55e';
-    } else {
-        badge.style.background = '#ef4444';
-    }
+
+    const avg = (vals.reduce((a, b) => a + b, 0) / vals.length).toFixed(2);
+    badge.textContent = avg + '/20';
+    badge.className   = 'card-moy-badge moy-cell-preview ' + (avg >= 10 ? 'card-moy-pass' : 'card-moy-fail');
 }
 </script>
 </body>
