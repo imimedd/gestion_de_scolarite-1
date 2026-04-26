@@ -52,7 +52,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     $_SESSION['role'] = 'enseignant';
                     $_SESSION['nom'] = trim($enseignant['nom']);
                     $_SESSION['prenom'] = trim($enseignant['prenom']);
-                    header("Location: prof-interface/index.php");
+                    header("Location: prof-interface/acceuille.php");
                     exit();
                 } else {
                     $error_message = "Mot de passe incorrect";
