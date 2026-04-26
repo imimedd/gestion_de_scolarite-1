@@ -73,111 +73,112 @@ $moyenne_generale = calculMoyenne($toutes_notes);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relevé de Notes — USTHB</title>
+    <title>Tableau de Bord — USTHB</title>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../prof-interface/style.css">
     <style>
-        .releve-wrapper {
+        .info-card {
             background: #fff;
             border: 1px solid #dde1ef;
             border-radius: 12px;
-            padding: 36px 40px;
-            max-width: 860px;
-        }
-        .releve-top {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #1a2a4a;
+            padding: 24px 28px;
             margin-bottom: 24px;
         }
-        .releve-top img { width: 70px; height: 70px; border-radius: 50%; }
-        .releve-top h2 { font-size: 20px; font-weight: 700; color: #1a2a4a; margin: 0; }
-        .releve-top p  { font-size: 13px; color: #888; margin: 4px 0 0; }
-        .releve-info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 32px;
-            margin-bottom: 28px;
-            padding: 18px 20px;
-            background: #f4f6fb;
-            border-radius: 8px;
-        }
-        .releve-info-grid p { font-size: 14px; color: #444; margin: 0; }
-        .releve-info-grid p strong { color: #1a2a4a; }
-        .sem-title {
-            font-size: 13px;
+        .info-card h3 {
+            font-size: 14px;
             font-weight: 700;
             color: #1a2a4a;
             text-transform: uppercase;
             letter-spacing: 0.08em;
-            margin: 24px 0 10px;
-            padding-left: 4px;
-            border-left: 3px solid #1a2a4a;
-            padding-left: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eef0f7;
         }
-        .moyenne-footer {
-            margin-top: 28px;
-            padding: 18px 24px;
-            background: #1a2a4a;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px 32px;
         }
-        .moyenne-footer .label { color: #aab4c8; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
-        .moyenne-footer .val   { color: #fff; font-size: 32px; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
-        .moyenne-footer .sub   { color: #aab4c8; font-size: 14px; }
+        .info-grid p {
+            font-size: 14px;
+            color: #444;
+            margin: 0;
+        }
+        .info-grid p strong {
+            color: #1a2a4a;
+        }
+        .moyenne-big {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1a2a4a;
+            font-family: 'IBM Plex Mono', monospace;
+            line-height: 1;
+        }
+        .moyenne-sub {
+            font-size: 14px;
+            color: #888;
+            margin-top: 4px;
+        }
         .statut-badge {
             display: inline-block;
-            padding: 6px 18px;
+            margin-top: 12px;
+            padding: 5px 16px;
             border-radius: 20px;
-            font-size: 14px;
-            font-weight: 700;
+            font-size: 13px;
+            font-weight: 600;
         }
         .statut-admis  { background: #dcfce7; color: #16a34a; }
         .statut-ajourn { background: #fee2e2; color: #dc2626; }
-        .btns-row {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
-            flex-wrap: wrap;
+        .sem-moyenne {
+            font-size: 13px;
+            color: #555;
+            margin-top: 10px;
         }
-        .btn-print {
-            padding: 10px 22px;
-            background: #1a2a4a;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
+        .sem-moyenne strong { color: #1a2a4a; }
+        .tabs-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            padding: 6px 16px;
+            border-radius: 20px;
+            border: 1px solid #dde1ef;
+            background: #f4f6fb;
+            color: #555;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             font-family: 'IBM Plex Sans', sans-serif;
-            transition: background .2s;
+            transition: all .2s;
         }
-        .btn-print:hover { background: #2c3e6a; }
-        .btn-retour {
-            padding: 10px 22px;
-            background: #f4f6fb;
-            color: #1a2a4a;
-            border: 1px solid #dde1ef;
+        .tab-btn.active, .tab-btn:hover {
+            background: #1a2a4a;
+            color: #fff;
+            border-color: #1a2a4a;
+        }
+        .cards-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        @media (max-width: 900px) { .cards-row { grid-template-columns: 1fr; } }
+        .btn-download-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 11px 22px;
+            background: #1a2a4a;
+            color: #fff;
             border-radius: 8px;
             font-size: 14px;
             font-weight: 600;
             text-decoration: none;
             transition: background .2s;
         }
-        .btn-retour:hover { background: #e8eef7; }
-
-        @media print {
-            .sidebar, .header, .btns-row, .btn-print, .btn-retour { display: none !important; }
-            .main { margin-left: 0 !important; }
-            .page-content { padding: 0 !important; }
-            .releve-wrapper { border: none; padding: 0; }
-        }
+        .btn-download-main:hover { background: #2c3e6a; }
     </style>
 </head>
 <body>
@@ -206,43 +207,80 @@ $moyenne_generale = calculMoyenne($toutes_notes);
     <!-- HEADER -->
     <div class="header">
         <div class="header-left">
-            <div class="header-icon">📄</div>
-            <p style="color:#000;font-size:16px;">Relevé de notes — <span style="color:#888;font-weight:300;">Étudiant</span></p>
+            <div class="header-icon">📊</div>
+            <p style="color:#000;font-size:16px;">Tableau de bord — <span style="color:#888;font-weight:300;">Étudiant</span></p>
         </div>
         <div class="year-badge"><?= $annee ?></div>
     </div>
 
     <!-- CONTENU -->
     <div class="page-content">
-        <div class="releve-wrapper">
 
-            <!-- En-tête du relevé -->
-            <div class="releve-top">
-                <img src="../image/logo.jpg" alt="USTHB">
-                <div>
-                    <h2>Relevé de Notes</h2>
-                    <p>Université des Sciences et de la Technologie Houari Boumediene</p>
+        <!-- Ligne 1 : Infos perso + Moyenne -->
+        <div class="cards-row">
+
+            <!-- Infos personnelles -->
+            <div class="info-card">
+                <h3>👤 Informations personnelles</h3>
+                <div class="info-grid">
+                    <p><strong>Nom :</strong> <?= htmlspecialchars($etudiant['nom']) ?></p>
+                    <p><strong>Prénom :</strong> <?= htmlspecialchars($etudiant['prenom']) ?></p>
+                    <p><strong>Matricule :</strong> <?= htmlspecialchars($etudiant['matricule']) ?></p>
+                    <p><strong>Spécialité :</strong> <?= htmlspecialchars($etudiant['specialite']) ?></p>
+                    <p><strong>Niveau :</strong> <?= htmlspecialchars($etudiant['palier']) ?></p>
+                    <p><strong>Section :</strong> <?= htmlspecialchars($etudiant['section']) ?></p>
+                    <p><strong>Groupe TD :</strong> <?= htmlspecialchars($etudiant['groupe_td']) ?></p>
+                    <p><strong>État :</strong> <?= htmlspecialchars($etudiant['etat']) ?></p>
                 </div>
             </div>
 
-            <!-- Infos étudiant -->
-            <div class="releve-info-grid">
-                <p><strong>Nom :</strong> <?= htmlspecialchars($etudiant['nom']) ?></p>
-                <p><strong>Prénom :</strong> <?= htmlspecialchars($etudiant['prenom']) ?></p>
-                <p><strong>Matricule :</strong> <?= htmlspecialchars($etudiant['matricule']) ?></p>
-                <p><strong>Spécialité :</strong> <?= htmlspecialchars($etudiant['specialite']) ?></p>
-                <p><strong>Niveau :</strong> <?= htmlspecialchars($etudiant['palier']) ?></p>
-                <p><strong>Section :</strong> <?= htmlspecialchars($etudiant['section']) ?></p>
-                <p><strong>Groupe TD :</strong> <?= htmlspecialchars($etudiant['groupe_td']) ?></p>
-                <p><strong>Année universitaire :</strong> <?= $annee ?></p>
+            <!-- Moyenne générale -->
+            <div class="info-card" style="text-align:center;">
+                <h3>📈 Moyenne générale</h3>
+                <?php if ($moyenne_generale !== null): ?>
+                    <div class="moyenne-big"><?= number_format($moyenne_generale, 2) ?></div>
+                    <div class="moyenne-sub">/ 20</div>
+                    <span class="statut-badge <?= $moyenne_generale >= 10 ? 'statut-admis' : 'statut-ajourn' ?>">
+                        <?= $moyenne_generale >= 10 ? '✅ Admis' : '❌ Ajourné' ?>
+                    </span>
+                    <div style="margin-top:16px;">
+                        <?php foreach ($notes_par_semestre as $sem => $notes_sem): ?>
+                            <?php $moy_sem = calculMoyenne($notes_sem); ?>
+                            <?php if ($moy_sem !== null): ?>
+                                <p class="sem-moyenne"><?= htmlspecialchars($sem) ?> : <strong><?= number_format($moy_sem, 2) ?></strong></p>
+                            <?php endif; ?>
+                        <?php endforeach; ?>
+                    </div>
+                <?php else: ?>
+                    <p style="color:#888;margin-top:20px;">Aucune note disponible.</p>
+                <?php endif; ?>
             </div>
 
-            <!-- Notes par semestre -->
+        </div>
+
+        <!-- Ligne 2 : Tableau des notes -->
+        <div class="table-card">
+            <div class="table-card-header">
+                📋 Notes par matière
+            </div>
+
             <?php if (empty($notes_par_semestre)): ?>
                 <div class="empty-state">Aucune note enregistrée.</div>
             <?php else: ?>
-                <?php foreach ($notes_par_semestre as $sem => $notes_sem): ?>
-                    <div class="sem-title"><?= htmlspecialchars($sem) ?></div>
+                <!-- Onglets semestres -->
+                <div style="padding:16px 20px 0;">
+                    <div class="tabs-bar">
+                        <?php $first = true; foreach ($notes_par_semestre as $sem => $unused): ?>
+                            <button class="tab-btn <?= $first ? 'active' : '' ?>"
+                                    onclick="showTab('sem_<?= md5($sem) ?>', this)">
+                                <?= htmlspecialchars($sem) ?>
+                            </button>
+                        <?php $first = false; endforeach; ?>
+                    </div>
+                </div>
+
+                <?php $first = true; foreach ($notes_par_semestre as $sem => $notes_sem): ?>
+                <div id="sem_<?= md5($sem) ?>" class="tab-content" <?= $first ? '' : 'style="display:none;"' ?>>
                     <table class="table1">
                         <thead>
                             <tr>
@@ -252,7 +290,7 @@ $moyenne_generale = calculMoyenne($toutes_notes);
                                 <th>TP</th>
                                 <th>Examen</th>
                                 <th>Coef</th>
-                                <th>Moyenne module</th>
+                                <th>Moyenne</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -266,7 +304,7 @@ $moyenne_generale = calculMoyenne($toutes_notes);
                                 <td><?= $n['cc2']    !== null ? number_format($n['cc2'],    2) : '<span style="color:#bbb">—</span>' ?></td>
                                 <td><?= $n['tp']     !== null ? number_format($n['tp'],     2) : '<span style="color:#bbb">—</span>' ?></td>
                                 <td><?= $n['examen'] !== null ? number_format($n['examen'], 2) : '<span style="color:#bbb">—</span>' ?></td>
-                                <td><?= $n['coefficient'] ?></td>
+                                <td><span class="groupe-tag"><?= $n['coefficient'] ?></span></td>
                                 <td>
                                     <?php if ($moy_mod !== null): ?>
                                         <strong style="color:<?= $moy_mod >= 10 ? '#16a34a' : '#dc2626' ?>">
@@ -280,33 +318,28 @@ $moyenne_generale = calculMoyenne($toutes_notes);
                             <?php endforeach; ?>
                         </tbody>
                     </table>
-                <?php endforeach; ?>
-
-                <!-- Moyenne générale -->
-                <div class="moyenne-footer">
-                    <div>
-                        <div class="label">Moyenne générale</div>
-                        <div class="val"><?= $moyenne_generale !== null ? number_format($moyenne_generale, 2) : '—' ?> <span class="sub">/ 20</span></div>
-                    </div>
-                    <?php if ($moyenne_generale !== null): ?>
-                        <span class="statut-badge <?= $moyenne_generale >= 10 ? 'statut-admis' : 'statut-ajourn' ?>">
-                            <?= $moyenne_generale >= 10 ? '✅ Admis' : '❌ Ajourné' ?>
-                        </span>
-                    <?php endif; ?>
                 </div>
+                <?php $first = false; endforeach; ?>
             <?php endif; ?>
-
-            <!-- Boutons -->
-            <div class="btns-row">
-                <button onclick="window.print()" class="btn-print">🖨️ Imprimer</button>
-                <a href="dashboard_etudiants.php" class="btn-retour">⬅️ Retour au tableau de bord</a>
-            </div>
-
         </div>
+
+        <!-- Bouton relevé -->
+        <div style="margin-top:8px;">
+            <a href="releve.php" class="btn-download-main">📄 Télécharger le relevé de notes</a>
+        </div>
+
     </div><!-- /page-content -->
 
     <?php include '../footer.php'; ?>
 </div><!-- /main -->
 
+<script>
+function showTab(id, btn) {
+    document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).style.display = 'block';
+    btn.classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -6,57 +6,75 @@ $error_message = null;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $email = trim($_POST['email']);
+    $identifiant = trim($_POST['email']);
     $password = $_POST['password'];
     
     $login_attempted = false;
 
-    // 1. On cherche d'abord dans la table enseignants
-    try {
-        $sqlEns = "SELECT * FROM enseignants WHERE email = ?";
-        $stmtEns = $pdo->prepare($sqlEns);
-        $stmtEns->execute([$email]);
-        $enseignant = $stmtEns->fetch();
+    // 1. Si c'est un matricule (que des chiffres) → étudiant
+    if (is_numeric($identifiant)) {
+        try {
+            $sqlEtu = "SELECT * FROM etudiants WHERE matricule = ?";
+            $stmtEtu = $pdo->prepare($sqlEtu);
+            $stmtEtu->execute([$identifiant]);
+            $etudiant = $stmtEtu->fetch();
 
-        if ($enseignant) {
-            $login_attempted = true;
-            // Les mots de passe sont en clair dans cette table d'après la DB
-            if ($password == $enseignant['password']) {
-                $_SESSION['user_id'] = $enseignant['matricule'];
-                $_SESSION['role'] = 'enseignant';
-                $_SESSION['nom'] = trim($enseignant['nom']);
-                $_SESSION['prenom'] = trim($enseignant['prenom']);
-
-                header("Location: prof-interface/index.php");
-                exit();
+            if ($etudiant) {
+                $login_attempted = true;
+                if ($password == $etudiant['password']) {
+                    $_SESSION['matricule'] = $etudiant['matricule'];
+                    $_SESSION['role'] = 'etudiant';
+                    header("Location: etudiant-interface/dashboard_etudiants.php");
+                    exit();
+                } else {
+                    $error_message = "Mot de passe incorrect";
+                }
             } else {
-                $error_message = "Mot de passe incorrect";
+                $error_message = "Étudiant non trouvé";
             }
+        } catch (PDOException $e) {
+            $error_message = "Erreur base de données";
         }
-    } catch (PDOException $e) {
-        // Ignorer si la table manque
     }
 
-    // 2. Si pas trouvé dans enseignants, on cherche dans administrateurs
+    // 2. Sinon c'est un email → enseignant
+    if (!$login_attempted) {
+        try {
+            $sqlEns = "SELECT * FROM enseignants WHERE email = ?";
+            $stmtEns = $pdo->prepare($sqlEns);
+            $stmtEns->execute([$identifiant]);
+            $enseignant = $stmtEns->fetch();
+
+            if ($enseignant) {
+                $login_attempted = true;
+                if ($password == $enseignant['password']) {
+                    $_SESSION['user_id'] = $enseignant['matricule'];
+                    $_SESSION['role'] = 'enseignant';
+                    $_SESSION['nom'] = trim($enseignant['nom']);
+                    $_SESSION['prenom'] = trim($enseignant['prenom']);
+                    header("Location: prof-interface/index.php");
+                    exit();
+                } else {
+                    $error_message = "Mot de passe incorrect";
+                }
+            }
+        } catch (PDOException $e) {}
+    }
+
+    // 3. Sinon → admin
     if (!$login_attempted) {
         try {
             $sql = "SELECT * FROM administrateurs WHERE email = ?";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute([$email]);
+            $stmt->execute([$identifiant]);
             $user = $stmt->fetch();
 
             if ($user) {
                 if (password_verify($password, $user['password'])) {
                     $_SESSION['user_id'] = $user['id'];
                     $_SESSION['role'] = $user['role'] ?? 'admin';
-                    
-                    if (isset($user['role']) && strtolower($user['role']) === 'enseignant') {
-                        header("Location: admin-interface/acceuille1.php");
-                        exit();
-                    } else {
-                        header("Location:admin-interface/acceuille1.php");
-                        exit();
-                    }
+                    header("Location: admin-interface/acceuille1.php");
+                    exit();
                 } else {
                     $error_message = "Mot de passe incorrect";
                 }
@@ -64,7 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $error_message = "Utilisateur non trouvé";
             }
         } catch (PDOException $e) {
-            // La table administrateurs n'existe probablement pas sur cette BDD
             $error_message = "Utilisateur non trouvé";
         }
     }
@@ -246,8 +263,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <form method="POST">
         <div class="form-group">
-            <label for="email">Adresse Email</label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="prenom.nom@usthb.dz" required>
+            <label for="email">Matricule / Email</label>
+            <input type="text" id="email" name="email" class="form-control" placeholder="prenom.nom@usthb.dz" required>
         </div>
 
         <div class="form-group">
